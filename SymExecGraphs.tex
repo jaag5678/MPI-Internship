@@ -1,0 +1,62 @@
+\documentclass{article}
+
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{amsthm}
+\usepackage[dvipsnames]{xcolor}
+
+%Short form to use stack_relative
+\newcommand{\stck}{\stackrel{\longrightarrow}}
+
+%A different version of the above 
+\newcommand{\stckdet}[1]{\stackrel{{#1}}}
+
+%We write a lot of relations between two events using the orderings, so a short form to use that
+\newcommand{\reln}[3]{#1\stck{_{#2}}#3}
+
+%We use a more detailed version of the above relation to indicate direct / indirect relations 
+
+\newcommand{\reldet}[4]{#1\stckdet{_{#2}}{{\stck{_{#3}}}}#4}
+
+%We also will introduce a short form to write an event belongs to some set
+\newcommand{\event}[2]{#1\!\in\!#2}
+
+%To make events and their type more close to each other
+\newcommand{\typ}[1]{\textit{#1}}
+\newcommand{\et}[2]{#1\!:\!\typ{#2}}
+
+%Short form to write color text
+\newcommand{\critic}[2]{\textcolor{#1}{\footnotesize #2}}
+
+%Some preliminary latex commands to format writing theorems 
+
+\newtheorem{lemma}{Lemma}
+
+\newtheorem{theorem}{Theorem}[lemma]
+
+\newtheorem{corollary}{Corollary}[theorem]
+
+\newtheorem{definition}{Definition}
+
+
+\begin{document}
+
+    
+        %\input{intro.tex}
+
+        %\input{Graph_Equivalence.tex}
+        
+        %\input{Intuition.tex}
+
+        %\input{Examples.tex}
+
+        \input{Rules.tex}
+
+        \input{Soundness.tex}
+
+\end{document}
+    
+
+

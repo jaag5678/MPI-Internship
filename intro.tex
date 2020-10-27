@@ -1,0 +1,28 @@
+\section{Objective}
+
+        This whole document's purpose is to gain clarity over certain ideas that have been formulated in my head. 
+        Usage of figures in this document will be heavy just to point out an intuition. 
+        This document is also the first one written in latex in this respect. 
+        The author of this article has taken a lot of effort just to start formulating ideas in latex format. 
+        So if there are certain typos or errors in text, please do not mind and kindly report it to the author. 
+
+    \section{Topic : Symmetry Reduction}
+
+        Model checking is heavily relied upon as a testing tool for programs. 
+        Given that programs are large model checking suffers from its constant problem of scalability. 
+        Add to the above the introduction of concurrent programs, scalability becomes more of an issue. 
+        
+        However, to optimize model checking of concurrency, certain algorithms rely on reusing information from one execution. 
+        In that sense, a certain dynamic programming approach is employed. 
+        This dynamic approach is done to avoid certain redundant explorations, as well as to quickly discard further exploration of programs that violate the concurrent semantics.
+        In the ones that I have read, which is called in literature as stateless model checking, storing the information of the writes each read operation has visited in some execution explored before is used to ensure optimal model checking. 
+        
+        But here the meaning of redundant is that of executions that the model checker has already explored. 
+        There exists another kind of redundancy which is the fact that two different executions result in the same outcome. 
+        This kind of redundancy relies more upon the semantic equivalence of two executions, rather than just syntactic. 
+
+        One such instance of such redundancy is the equivalence(not equality) of exeuction graphs.
+        The equivalence is sort of homomorphic as well as isomorphic. 
+        Such kind of redundancy appears in concurrent programs due to different components of the program tasked to do mostly the same thing. (take for example, a client-server system)
+        Such equivalent executions can be said to be symmetric to each other. 
+        This means that one needs to explore just one of these executions to ensure the other symmetric ones are also explored.

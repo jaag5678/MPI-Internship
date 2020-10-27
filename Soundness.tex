@@ -1,0 +1,78 @@
+\paragraph{Soundness of the rules above}
+
+    To prove soundness, we first define the following: 
+
+    \begin{definition}{Implied Write Order(\emph{iwo})}
+        These are the orders implied between any two writes, which can be derived as 
+        \begin{align*}
+            w_i^j;rf;po;w_k^j \\
+            w_i^j;po;rf^{-1};w_k^j
+        \end{align*}
+        This order is also transitive. 
+    \end{definition}
+
+    When the implied write order and symmetric memory order form a cycle, that execution for us is considered invalid. This means the irreflexivity constraint can be also put as :
+    \begin{align*}
+        smo;iwo
+    \end{align*}
+
+    Some observations on this:
+    \begin{itemize}
+        %\item There can be only one implied write order between two symmetric threads. (since there are just two reads.)
+        \item No write order is implied when a read reads from its own thread's write.
+        \item Implied write orders between two symmetric threads are reversed when they are swapped.
+        \item Either all implied write orders between two threads are compliant with symmetric order, or they are all not. (do an example based analysis, show that it would otherwise violate coherence).
+    \end{itemize}
+
+    \paragraph{Case for two threads}
+
+        \begin{itemize}
+            \item For every implied write order against symmetric write order, swapping the thread identities reverses the implied write order, thus maintaining the irreflexivity constraint.
+            \item Because all implied write orders between threads are either compliant or not, swapping thread identities does indeed give us an execution compliant with our irreflexivity constraints. 
+            \item Hence, for every execution not covered by our rules, there is a symmetric one covered. 
+        \end{itemize}
+
+    \paragraph{Case for three or more threads}
+        Method 1: 
+        \begin{itemize}
+            \item I see it as a simple case of bubble sort. Not sure how to show  it though. 
+            \item Construct a total order for each set of equal writes using implied write orders and the symmetric memory order. 
+            \item Then the entire process of constructing a symmetric execution that respects our constraint is just a sorting problem. 
+            \item Note that write orders not implied can be freely set by us to respect symmetric memory order. 
+            \item How do we show this? 
+        \end{itemize}
+
+        Method 1: For writes above and below (The general case of soundness)
+        \begin{itemize}
+            \item Proof by contradiction 
+            \item Suppose all write orders above reads are sorted as per our need. 
+            \item Then for writes below, firstly, if an implied write order is not respected, then either the writes above also not respected or it is a free order. 
+            \item If it is not respected, this contradicts our assumption.
+            \item If it is free, then we can freely swap the two threads, fixing the implied wrtie order of the write below the read. 
+            \item The above writes will still be in order, because the above write order between those two threads swapped was free, and smo is total w.r.t the equal writes of each symmetric thread.  
+        \end{itemize}
+
+        Method 1: The base case of soundness (one set of equal writes)
+        Part1: Show that collection of $\stck{_{iwo}}$ w.r.t. one set of equal writes do not form a cycle
+        \begin{itemize}
+            \item If a cycle exists, we can consider the base case when three writes are involved.
+            \item Showing for three writes that cycle cannot exists extends to the more general case too. 
+            \item Two cases : \begin{itemize}
+                                    \item All writes above the read
+                                    \item All writes below the read
+                            \end{itemize}
+            \item For the writes above if we have $\reln{w_j^i}{iwo}{w_k^i}$, then $T_j$'s read reads from $T_k$'s write $w_k^i$. 
+            \item If the three writes above read form a cycle, then this case violates coherence. ($po \cup rf^{-1} \ \text{acyclic}$.)
+            \item Similarly for the case of writes below the read, if they form a cycle, it is a case violating coherence. ($po \cup rf \ \text{acyclic}$.)
+        \end{itemize}
+
+        \critic{blue}{The above two acyclic parts of coherence is only for events inovlved in one memory operation. The respective generalized forms would be restrictions of Load Buffering or Out of Thin Air values, which is not of our concern when we consider just writes and read to same memory.}
+    
+
+        Part2: The case for only one set of equal writes 
+        \begin{itemize}
+            \item Show that once an implied write order between two writes is fixed, it will never be un-fixed again.
+            \item To show this, we can keep the implied write order transitive. 
+            \item Go by assuming an order to exist between two writes which is correct. 
+            \item Consider another implied order between one of these wrties and another outside which is not correct. 
+        \end{itemize}
