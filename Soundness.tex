@@ -2,7 +2,7 @@
 
     To prove soundness, we first define the following: 
 
-    \begin{definition}{Implied Write Order(\set{\emph{iwo})}}
+    \begin{definition}{Implied Write Order(\emph{iwo})}
         Binary relation between any two distinct writes, derived through the following two sequential conposition:  
         \begin{align*}
             w_i^j;rf;po;w_k^j \\
@@ -54,7 +54,7 @@
         \begin{align}
             \reln{w_i^j}{po}{r_i}; \quad \reln{r_i}{rf}{w_k^j}; \\
             \reln{w_k^j}{po}{r_k}; \quad \reln{r_k}{rf}{w_i^j}; 
-        \end{align}}  
+        \end{align} 
         
         \critic{red}{Put a figure here to better understand}
 
@@ -71,7 +71,7 @@
         Without loss of generality, let us consider that the writes above the read are compliant with $stck{_{smo}}$. 
         \begin{align}
             \reln{w_i^j}{iwo}{w_k^j} \ \wedge \ \reln{w_i^j}{smo}{w_k^j}
-        \end{align}}
+        \end{align}
         The other set of implied write order can only be between writes below the read. And because $T_i$'s read is already in a $\stck{_{rf}}$ relation, only $T_j$'s read can be used. These two conditions can only be satisfied if $w_i^l;rf;po;w_k^l$, hence giving us seomthing compliant once again with $\stck{_{smo}}$.
         \begin{align}
             \reln{w_i^l}{iwo}{w_k^l} \ \wedge \ \reln{w_i^l}{smo}{w_k^l}
