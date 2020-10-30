@@ -16,7 +16,13 @@
     \end{definition}
 
     \begin{definition}{Symmetric Memory Order (\emph{smo})}
-        A strict partal order between writes in a set of symmetric threads.
+        A strict partal order between writes in a set of symmetric threads. Consider a set of symmetric threads $T_1 \equiv T_2 \equiv ... \equiv T_n$. Each of these threads have exactly one read event, and multiple write events, all to the same memory, say $x$. 
+
+        Then each write in the above threads are involved in a symmetric order, such that. 
+        \begin{align*}
+            \forall i \in [0, n-1] \ . \ \reln{w_i^j}{smo}{w_{i+1}^j}
+        \end{align*}
+        Where j denotes the $j^{th}$ event in any of the threads, which is a write.
     \end{definition}
 
     \critic{blue}{Perhaps should put examples for the above defintion.}
@@ -29,25 +35,16 @@
         \end{align*}
     \end{definition}
 
-    \paragraph{Name to be decided}
-
-        We consider a set of symmetric threads $T_1 \equiv T_2 \equiv ... \equiv T_n$. Each of these threads have exactly one read event, and multiple write events, all to the same memory, say $x$. 
-
-        Each write in the above threads are involved in a symmetric order, such that. 
-        \begin{align*}
-            \forall i \in [0, n-1] \ . \ \reln{w_i^j}{smo}{w_{i+1}^j}
-        \end{align*}
-        Where j denotes the $j^{th}$ event in any of the threads, which is a write. 
-
+    \paragraph{Main Rule}
         Using the above setup, our intention is to explore lesser execution graphs leveraging the symmetry that can result due to swapping of thread identities. For this, we enforce a restriction on possible $\stck{_{rf}}$ relations that are to be considered \emph{valid}. A valid $\stck{_{rf}}$ relation is one that respects the following \textbf{irreflexivity constraints}. 
         \begin{align*}
-            rf;po;smo \\
-            rf^{-1};smo;po 
+            smo;rf;po \\
+            smo;po;rf^{-1} 
         \end{align*}
 
         \critic{blue}{We can add here more as we go about to prove completeness.}
 
-        \critic{blue}{Place examples to show how our analysis through examples satisfy the above irreflexivity constraint.}
+        \critic{red}{Recall examples to show how our analysis through examples satisfy the above irreflexivity constraint.}
 
         
 

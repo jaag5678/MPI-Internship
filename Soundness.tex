@@ -3,94 +3,154 @@
     To prove soundness, we first define the following: 
 
     \begin{definition}{Implied Write Order(\emph{iwo})}
-        Binary relation between any two distinct writes, derived through the following two sequential conposition:  
+        Binary relation between any two \emph{distinct} writes, derived through the following two sequential conposition:  
         \begin{align*}
-            w_i^j;rf;po;w_k^j \\
-            w_i^j;po;rf^{-1};w_k^j
+            w_i^j;po;rf^{-1};w_k^j \\
+            w_i^j;rf;po;w_k^j 
         \end{align*}
     \end{definition}
 
-    When the implied write order and symmetric memory order form a cycle, that execution for us is considered invalid. This means the irreflexivity constraint can be also put as :
-    \begin{align*}
-        smo;iwo
-    \end{align*}
+%---------------------------------------------------------------------------------------------------------------------------------    
 
-    Some observations:
-    \begin{itemize}
-        %\item There can be only one implied write order between two symmetric threads. (since there are just two reads.)
-        \item No write order is implied when a read reads from its own thread's write.
-        \item Implied write orders between two symmetric threads are reversed when they are swapped.
-        \item Either all implied write orders between two threads are compliant with symmetric order, or they are all not. (do an example based analysis, show that it would otherwise violate coherence).
-    \end{itemize}
+    \begin{property}{Simplified irreflexivity rule}
+        
+        The irreflexivity constraint rule is equivalent to the following irreflexivity condition 
+        \begin{align}
+            smo;iwo
+        \end{align}
+    \end{property}
 
-    \paragraph{No write order is implied when a read reads from its own thread's write}
+    \begin{proof}
+        Expanding for implied write order as per the definition, gives us the following two sequential compositions. 
+        \begin{align}
+            smo;w_i^j;po;rf^{-1};w_k^j \\
+            smo;w_i^j;rf;po;w_k^j 
+        \end{align}
+        From the definiton of symmetric order, the above can be simplified to
+        \begin{align}
+            smo;po;rf^{-1} \\
+            smo;rf;po 
+        \end{align}
+        Hence, proving our property. 
+    \end{proof}
+
+%-----------------------------------------------------------------------------------------------------------------------------------
+
+    \begin{property}
+        No write order is implied when a read reads from its own thread's write
+    \end{property}
+
+    \begin{proof}
         If the read is from its own thread's write, then we can infer that $i=k$ in both the sequential compositions. Hence  
         \begin{align*}
             w_i^j;rf;po;w_i^j \\
             w_i^j;po;rf^{-1};w_i^j
         \end{align*} 
-        Since implied write orders only concern with distinct writes, $\reln{w_i^j}{iwo}{w_i^j}$ is not of our concern. (irreflexive)
+        which gives us $\reln{w_i^j}{iwo}{w_i^j}$.
+        Since implied write orders are only between distinct writes, the property is proven.  
+    \end{proof}
+        
+%-------------------------------------------------------------------------------------------------------------------------------------
 
-    \paragraph{Implied write orders between two symmetric threads are reversed when they are swapped.}
-        Considering first sequential composition, i.e. $w_i^j;rf;po;w_k^j$, elaboration gives us the following relations involved:
+    \begin{property}
+        Implied write orders between two symmetric threads are reversed when they are swapped.
+    \end{property}
+        
+    \begin{proof}
+        Considering first sequential composition, i.e. $w_i^j;rf;po;w_k^j$, expanding gives us the following binary relations involved:
         \begin{align}
             \reln{w_i^j}{rf}{r_k} \\
             \reln{r_k}{po}{w_k^j}
         \end{align}
-        Swapping thread identities meaning swapping the indics $i$ and $k$, thus giving us 
+        Swapping thread identities involves swapping the indices $i$ and $k$ for each event, thus giving us 
         \begin{align}
             \reln{w_k^j}{rf}{r_i} \\
             \reln{r_i}{po}{w_i^j}
         \end{align}
-        The above through sequential composition, gives us  $w_k^j;rf;po;w_i^j$, which is $\reln{w_k^j}{iwo}{w_i^j}$, which is the exact reverse of the original configuration before swapping. 
+        Through sequential composition of the above, we get $w_k^j;rf;po;w_i^j$, which by definition is $\reln{w_k^j}{iwo}{w_i^j}$.
 
-        The argument is in the same lines for the second sequential composition. 
-    
-    \paragraph{There are at most two implied write orders between writes of two threads}
+        The argument is symmetric for the second sequential composition. 
+    \end{proof}
         
-        Consider two threads $T_i$ and $T_k$. Suppose we have one implied write order between one of their writes, i.e. $\reln{w_i^j}{iwo}{w_k^j}$. Now if the writes are above the read in program order, then this can be justified by $w_i^j;po;rf^{-1};w_k^j$, thus involving $T_i$'s read in a $\stck{_{rf}}$ relation. If the writes are below, this can be justified by $w_i^j;rf;po;w_k^j$, involvuing $T_k$'s read in a $\stck{_{rf}}$ relation. 
+%-------------------------------------------------------------------------------------------------------------------------------------
 
-        Without loss of generality, let us consider that we have an implied write order between writes above the read. Because  $\stck{_{rf}}$ is funcitonal, we cannot have another implied write order between another set of writes above the read such that $\reln{w_i^l}{iwo}{w_k^l}$. If we however, consider $\reln{w_k^l}{iwo}{w_i^l}$ between the writes above, then it will involve $T_k$'s read in a $\stck{_{rf}}$ relation. However, this violates coherence as the relations established so far violates the coherence rule of $po \cup rf^{-1} \ \text{acyclic}$. The following relations being involved: 
+    \begin{property}
+        There are at most two implied write orders between writes of two threads.
+    \end{property}
+        
+    \begin{proof}
+        Consider two threads $T_i$ and $T_k$. Suppose we have one implied write order between one of their writes, i.e. 
         \begin{align}
-            \reln{w_i^j}{po}{r_i}; \quad \reln{r_i}{rf}{w_k^j}; \\
-            \reln{w_k^j}{po}{r_k}; \quad \reln{r_k}{rf}{w_i^j}; 
-        \end{align} 
-        
-        \critic{red}{Put a figure here to better understand}
+            \reln{w_i^j}{iwo}{w_k^j}.    
+        \end{align}
+        Expanding as per the first sequential composition gives us 
+        \begin{align}
+            w_i^j;po;rf^{-1};w_k^j
+        \end{align}
+        which also indicates a $\stck{_{rf}}$ with $T_i$'s read and that the writes involved in the composition are above the respective reads.
 
-        If we however, consider an implied write order between writes below the read, it can be justified by  $w_i^j;rf;po;w_k^j$, involvuing $T_k$'s read in a $\stck{_{rf}}$ relation, without violating Coherence. 
+        Now suppose we have an implied write order between another set of writes, i.e.
+        \begin{align}
+            \reln{w_i^l}{iwo}{w_k^l}.    
+        \end{align}
+        Expanding as per the first sequential composition of implied write order is not possible as $\stck{_{rf}}$ is functional. Hence, using the second we have
+        \begin{align}
+            w_i^j;rf;po;w_k^j 
+        \end{align}  
+        which also indicates a $\stck{_{rf}}$ with $T_i$'s read that the writes involved in the composition are below the respective reads.
 
-        Because both reads of $T_i$ and $T_k$ have been involved in a $\stck{_{rf}}$ relation, which is functional by definition, we cannot have more than two implied write orders between two threads. '
-        
-        \critic{red}{Not satisfied with the formal argument because it is too verbal. Think about how to reduce text.}
-        
-    \paragraph{Implied write ordes between two threads are either all compliant with $stck{_{smo}}$ or they are all not}
+        Since both reads are now involved in a $\stck{_{rf}}$ relation, and since this relation is functional, we cannot have any more implied write orders between $T_i$ and $T_j$, thus verifying our property. 
 
-        Because we can have at most two implied write orders between two threads and that one of them is above read and one below, we also note that both sequential compositions of implied write orders are used (one for each set of writes). 
+        \critic{blue}{Better written in contrast to previous argument.}
+        \critic{red}{However, is it necessary to show by contradiction?}
+    \end{proof}
         
-        Without loss of generality, let us consider that the writes above the read are compliant with $stck{_{smo}}$. 
+%--------------------------------------------------------------------------------------------------------------------------------------
+
+    \begin{property}
+        Implied write ordes between two threads are either all compliant with $stck{_{smo}}$ or they are all not
+    \end{property}
+
+    \begin{proof}
+        
+        If each read reads from its own write, we have no implied write order established, thus maintaining the property. 
+
+        For cases where implied write orders are established, without loss of generality, let us consider one between writes above the read are compliant with $stck{_{smo}}$:
         \begin{align}
             \reln{w_i^j}{iwo}{w_k^j} \ \wedge \ \reln{w_i^j}{smo}{w_k^j}
         \end{align}
-        The other set of implied write order can only be between writes below the read. And because $T_i$'s read is already in a $\stck{_{rf}}$ relation, only $T_j$'s read can be used. These two conditions can only be satisfied if $w_i^l;rf;po;w_k^l$, hence giving us seomthing compliant once again with $\stck{_{smo}}$.
+        The other set of implied write order, if established can only be between writes below the read. Suppose we have such an order but not compliant with $stck{_{smo}}$:
+        \begin{align}
+            \reln{w_k^l}{iwo}{w_i^l} \ \wedge \ \reln{w_i^l}{smo}{w_k^l}
+        \end{align}
+        Upon expanding using the second sequential composition (because writes are below the read), we get
+        \begin{align}
+            w_k^l;rf;po;w_i^l 
+        \end{align}
+        But this implies another $\stck{_{rf}}$ relation with $T_i$'s read, which violates the functional property of it. Hence we can only have an implied write order compliant with $stck{_{smo}}$.
         \begin{align}
             \reln{w_i^l}{iwo}{w_k^l} \ \wedge \ \reln{w_i^l}{smo}{w_k^l}
         \end{align}
 
-        The exact opposite case would make both the implied write orders not compliant, thus completing our proof. 
+        \critic{red}{Not sure if we need to show that the compliant relation also holds as it only brings an rf realtion with $T_k$'s read, which wanst established before.}
 
+        The opposite case would make both the implied write orders requiring to not be compliant, thus by symmetry completing our proof. 
+    \end{proof}
 
-        \critic{red}{Again, too verbal and not concise enough. Is it just latex laziness?}
+%-------------------------------------------------------------------------------------------------------------------------------------- 
+        
+    \begin{property}
+        Implied write orders are acyclic
+    \end{property}
 
-    \paragraph{Implied write orders are acyclic}
-
+    \begin{proof}
         %By Contradiction 
         Suppose a cycle exists. Then without loss of generality, we can consider the cycle composed of 3 writes.
         \begin{align}
             \reln{w_i^j}{iwo}{w_k^j} \ \wedge \reln{w_k^j}{iwo}{w_l^j} \ \wedge \reln{w_l^j}{iwo}{w_i^j}  
         \end{align}
         
-        If these writes are above the read, then we have the following relations that result in the above relations.
+        If these writes are above the read, then we have the following relations that result in the above cycle.
         \begin{align}
             \reln{w_i^j}{po}{r_i} \ \wedge \ \reln{r_i}{rf^{-1}}{w_k^j} \\
             \reln{w_k^j}{po}{r_k} \ \wedge \ \reln{r_k}{rf^{-1}}{w_l^j} \\
@@ -98,7 +158,7 @@
         \end{align}
         The above relations form a cycle thus violating $po \cup rf^{-1} \ \text{acyclic}$ rule for coherence and hence violating coherence.
         
-        If these writes are below the read, then we have the following relations that result in the above relations.
+        If these writes are below the read, then we have the following relations that result in the above cycle.
         \begin{align}
             \reln{w_i^j}{po}{r_i} \ \wedge \ \reln{r_i}{rf}{w_k^j} \\
             \reln{w_k^j}{po}{r_k} \ \wedge \ \reln{r_k}{rf}{w_l^j} \\
@@ -106,27 +166,54 @@
         \end{align}
         The above relations form a cycle thus violating $po \cup rf \ \text{acyclic}$ rule for coherence and hence violating coherence.
 
-        Because both cases violate coherence, we infer that $\stck{_{iwo}}$ is acylic. 
+        Because both cases violate coherence, we conclude that $\stck{_{iwo}}$ must be acylic. 
 
         \critic{blue}{A bit better written compared to the previous proofs}
+    \end{proof}
 
-    \paragraph{Case for two threads}
+%---------------------------------------------------------------------------------------------------------------------------------------
 
-        \begin{itemize}
-            \item For every implied write order against symmetric write order, swapping the thread identities reverses the implied write order, thus maintaining the irreflexivity constraint.
-            \item Because all implied write orders between threads are either compliant or not, swapping thread identities does indeed give us an execution compliant with our irreflexivity constraints. 
-            \item Hence, for every execution not covered by our rules, there is a symmetric one covered. 
-        \end{itemize}
+    \critic{red}{Need to also prove the properties of incmoing or outgoing write orders.}
+
+    \subsubsection{Soundness}
+
+        To prove that our rules our sound, we show that for every implied write order such that $smo;iwo$ is reflexive, we can swap the corresponding thread identities to reverse the write order between them, thus respectiing our irreflexivity constraint. However, we must ensure that once write orders are "fixed" in this fashion, they remain fixed, i.e. the relation cannot appear again to be wrong. Once we show this, we also need to show that this holds in general given multiple sets of equal writes. 
+        
+        \paragraph{Part1}
+            For a given set of equal writes, once an implied write order is fixed, it remains fixed. 
+            (A more formal statement required)
+        \begin{proof}
+            %Proof by contradiction 
+            Suppose we have one implied write order which is correct / fixed between writes $w_i^j$ and $w_k^j$.
+            \begin{align}
+                \reln{w_i^j}{iwo}{w_k^j}
+            \end{align}
+            Without loss of generality, suppose these writes are above the read. We then divide our concern into two parts, one with implied write orders with $w_i^j$ which are wrong and the second with those of $w_k^j$.
+
+            Case1: 
+            Because $w_i^j$ is a write above read and $\reln{w_i^j}{iwo}{w_k^j}$, other implied write orders with $w_i^j$ can be of the form:
+            \begin{align}
+                \reln{w_m^j}{iwo}{w_i^j}
+            \end{align}
+            If this implied order is wrong, swapping thread identities will  give us the following relations 
+            \begin{align}
+                \reln{w_i^j}{iwo}{w_m^j} \ \wedge \ \reln{w_m^j}{iwo}{w_k^j}  
+            \end{align}  
+            Here, there is no implied write order relation between $w_i^j$ and $w_k^j$, hence we can consider them as being fixed. 
+            If the implied order between $w_m^j$ and $w_k^j$ is wrong, swapping it will result in the following relations
+            \begin{align}
+                \reln{w_i^j}{iwo}{w_k^j} \ \wedge \ \reln{w_k^j}{iwo}{w_m^j}  
+            \end{align}  
+            Here, the implied write order between $w_i^j$ and $w_k^j$ remains the same. Thus, for this case, we can conclude that the relation remains "fixed".
+
+            Case2: 
+            To be done.
+        \end{proof}
+
+
+        
 
     \paragraph{Case for three or more threads}
-        Method 1: 
-        \begin{itemize}
-            \item I see it as a simple case of bubble sort. Not sure how to show  it though. 
-            \item Construct a total order for each set of equal writes using implied write orders and the symmetric memory order. 
-            \item Then the entire process of constructing a symmetric execution that respects our constraint is just a sorting problem. 
-            \item Note that write orders not implied can be freely set by us to respect symmetric memory order. 
-            \item How do we show this? 
-        \end{itemize}
 
         Method 1: For writes above and below (The general case of soundness)
         \begin{itemize}
@@ -136,20 +223,6 @@
             \item If it is not respected, this contradicts our assumption.
             \item If it is free, then we can freely swap the two threads, fixing the implied wrtie order of the write below the read. 
             \item The above writes will still be in order, because the above write order between those two threads swapped was free, and smo is total w.r.t the equal writes of each symmetric thread.  
-        \end{itemize}
-
-        Method 1: The base case of soundness (one set of equal writes)
-        Part1: Show that collection of $\stck{_{iwo}}$ w.r.t. one set of equal writes do not form a cycle
-        \begin{itemize}
-            \item If a cycle exists, we can consider the base case when three writes are involved.
-            \item Showing for three writes that cycle cannot exists extends to the more general case too. 
-            \item Two cases : \begin{itemize}
-                                    \item All writes above the read
-                                    \item All writes below the read
-                            \end{itemize}
-            \item For the writes above if we have $\reln{w_j^i}{iwo}{w_k^i}$, then $T_j$'s read reads from $T_k$'s write $w_k^i$. 
-            \item If the three writes above read form a cycle, then this case violates coherence. ($po \cup rf^{-1} \ \text{acyclic}$.)
-            \item Similarly for the case of writes below the read, if they form a cycle, it is a case violating coherence. ($po \cup rf \ \text{acyclic}$.)
         \end{itemize}
 
         \critic{blue}{The above two acyclic parts of coherence is only for events inovlved in one memory operation. The respective generalized forms would be restrictions of Load Buffering or Out of Thin Air values, which is not of our concern when we consider just writes and read to same memory.}
