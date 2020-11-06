@@ -173,7 +173,39 @@
 
 %---------------------------------------------------------------------------------------------------------------------------------------
 
-    \critic{red}{Need to also prove the properties of incmoing or outgoing write orders.}
+    \begin{property}
+        Writes $w_i$ above read in each thread can only have one relation of the form $\reln{w_i}{iwo}{w}$ but can have several of the form $\reln{w}{iwo}{w_i}$. 
+    \end{property}
+
+    \begin{proof}
+        Suppose a write $w_i^j$ above a read has a relation with $w_k^j$ such that $\reln{w_i^j}{iwo}{w_k^j}$. Expanding based on both forms of implied write order, we get:
+        \begin{align}
+            \reln{w_i^j}{po}{r_i} \ \wedge \ \reln{r_i}{rf_{-1}}{w_k^j} \\ 
+            \reln{w_i^j}{rf}{r_k} \ \wedge \ \reln{r_k}{po}{w_k^j}
+        \end{align}
+        Because $w_i^j$ is above the read, the first set of relations are the valid ones to establish our impleid write order. $\reln{r_i}{rf_{-1}}{w_k^j}$ suggests that $T_i$'s read has been satisfied by write $w_k^j$. Because $\stck{_{rf}}$ is functional and we have just one read per symmetric thread, we cannot have any more implied write order relations of the form $\reln{w_i^j}{iwo}{w^j}$. 
+
+        There can be many relations of the form $\reln{w_k^j}{iwo}{w_i^j}$ as $k$ can be identity of any thread, whose read gets satisfied.  
+    \end{proof}
+
+%---------------------------------------------------------------------------------------------------------------------------------------
+   
+    \begin{property}
+        Writes $w_i$ below read in each thread can only have one relation of the form $\reln{w}{iwo}{w_i}$ but can have several of the form $\reln{w_i}{iwo}{w}$. 
+    \end{property}
+
+    \begin{proof}
+        Suppose a write $w_i^j$ below the read has a relation with $w_k^j$ such that $\reln{w_k^j}{iwo}{w_i^j}$. Expanding based on both forms of implied write order, we get:
+        \begin{align}
+            \reln{w_k^j}{po}{r_k} \ \wedge \ \reln{r_k}{rf_{-1}}{w_i^j} \\ 
+            \reln{w_k^j}{rf}{r_i} \ \wedge \ \reln{r_i}{po}{w_i^j}
+        \end{align}
+        Because $w_i^j$ is below the read, the second set of relations are the valid ones to establish our impleid write order. $\reln{w_k^j}{rf}{r_i}$ suggests that $T_i$'s read has been satisfied by write $w_k^j$. Because $\stck{_{rf}}$ is functional and we have just one read per symmetric thread, we cannot have any more implied write order relations of the form $\reln{w^j}{iwo}{w_i^j}$. 
+
+        There can be many relations of the form $\reln{w_i^j}{iwo}{w_k^j}$ as $k$ can be identity of any thread, whose read gets satisfied.  
+    \end{proof}
+
+%----------------------------------------------------------------------------------------------------------------------------------------
 
     \subsubsection{Soundness}
 
