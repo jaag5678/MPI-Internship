@@ -373,13 +373,24 @@
 
                 Since $T_i$'s read is still free, $w_i^j$ can have implied write orders with $w^j$ of the form
                 \begin{align}
-                    \reln{w_i^j}{iwo}{w^j} \\
+                    \reln{w^j}{iwo}{w_i^j} \\
                     \reln{w_i^j}{iwo}{w^j} 
                 \end{align}
 
-                \critic{blue}{This case is symmetric to the above, so we will write it later.}
+                For the first form of relation, note that we also have by \ref{prop1} and by \ref{SymMemO}, 
+                \begin{align}
+                    \reln{w^j}{smo}{w_i^j} \ \wedge \ \reln{w^j}{smo}{w_k^j}
+                \end{align}
 
-                For the second form, while we swap threads $t_i$ and $T_k$, we get the following new relations (correct his)
+                By \ref{prop3} on swapping two threads $T_i$ and $T_k$, we have 
+                \begin{align}
+                    \reln{w_i^l}{iwo}{w_k^j} \\
+                    \reln{w^j}{iwo}{w_k^j}
+                \end{align}
+
+                Both relations respect our irreflexivity constraint.  Hence, maintaining that new implied write order relations with $w^j$ are not wrong.
+
+                For the second form, while we swap threads $T_i$ and $T_k$, we get the following new relations (correct his)
                 \begin{align}
                     \reln{w_i^l}{iwo}{w_k^j} \\
                     \reln{w_k^j}{iwo}{w^j}
@@ -399,10 +410,36 @@
                 
                 Thus, such a relation could have not been there before, and hence was not fixed. 
 
-                Now that this new relation exists, fixing it, will keep it remain fixed, by our first part of proof (label them please).
-
                 \critic{red}{Write the above argument better please.}
 
+                Part2: There exists an implied write order between another write $w^j$ and $w_k^j$.
+
+                Since $T_k$'s read is already established in a reads-from relation, by \ref{prop7}, $w_k^j$ can have implied write orders with some $w^j$ only of the form 
+                \begin{align}
+                    \reln{w^j}{iwo}{w_k^j}
+                \end{align}
+
+                By \ref{prop3}, swapping thread identities $T_i$ and $T_k$ will give us the following relations 
+                \begin{align}
+                    \reln{w_i^l}{iwo}{w_k^l} \\ 
+                    \reln{w^j}{iwo}{w_i^j} 
+                \end{align}
+                The second relation may not be compliant to the irreflexivity condition, hence can be a new implied relation which is wrong. To show that this is new and could have not occurred before while swapping threads to fix implied write orders of $w^j$, consider the original configuration we have 
+                \begin{align}
+                    \reln{w_i^j}{smo}{w_k^j} \ \wedge \ \reln{w^j}{iwo}{w_k^j}
+                \end{align}
+
+                For $\reln{w^j}{iwo}{w_i^j}$ to have been there before, we need an event $x$ to connect, hence by possible implied write orders one can have with $w^j$ and $w_k^j$. By \ref{prop7}, $w^j$ can only have relations of the form $\reln{w}{iwo}{w^j}$. Thusm we have the possible two forms of relations that could exist:
+                \begin{align}
+                    \reln{x}{iwo}{w^j} \ \wedge \ \reln{w_i^j}{iwo}{x} \\
+                    \reln{x}{iwo}{w^j} \ \wedge \ \reln{x}{iwo}{w_i^j} \\ 
+                \end{align}
+
+                The second form cannot exist due to \ref{prop7}. While the first form could exist, it violates coherence ($po \cup rf_{-1}$ acylcic). 
+                
+                Thus, such a relation could have not been there before, and hence was not fixed. 
+
+                \critic{red}{Although the soundness proof is written completely, it requires proper formatting and references to the properties and definitions we wrote above. This will make it concicse and a lot of symmetric arguments can be avoided.}
         \end{proof}
 
         
