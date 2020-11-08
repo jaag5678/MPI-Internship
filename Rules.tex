@@ -16,6 +16,7 @@
     \end{definition}
 
     \begin{definition}{Symmetric Memory Order (\emph{smo})}
+        \label{SymMemO}
         A strict partal order between writes in a set of symmetric threads. Consider a set of symmetric threads $T_1 \equiv T_2 \equiv ... \equiv T_n$. Each of these threads have exactly one read event, and multiple write events, all to the same memory, say $x$. 
 
         Then each write in the above threads are involved in a symmetric order, such that. 
@@ -28,6 +29,7 @@
     \critic{blue}{Perhaps should put examples for the above defintion.}
 
     \begin{definition}{Reads-From (\emph{rf})}
+        \label{ReadF}
         Binary relation that links a read to a write from which its value comes. Note that for our purpose, this relation is functional.
         For example, if a read $r_i^j$ gets its read value from write $w_k^l$, then we have the relation. 
         \begin{align*}
@@ -41,6 +43,8 @@
             smo;rf;po \\
             smo;po;rf^{-1} 
         \end{align*}
+
+        \critic{blue}{Perhaps consider labelling this rule}
 
         \critic{blue}{We can add here more as we go about to prove completeness.}
 
