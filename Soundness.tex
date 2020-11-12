@@ -279,54 +279,113 @@
             \begin{align*}
                 \reln{w_i^j}{iwo}{w_k^j}
             \end{align*}
-            Without loss of generality, suppose these writes are above the read. We then divide our concern into two cases, one with implied write orders with $w_i^j$ which are wrong and the second with those of $w_k^j$.
+            
+            We divide our proof into two cases, one for writes above the read and one for writes below. 
 
-            \paragraph{Case1} 
-                Because Prop \ref{prop7} and $\reln{w_i^j}{iwo}{w_k^j}$, other implied write orders with $w_i^j$ can be of the form:
-                \begin{align*}
-                    \reln{w_m^j}{iwo}{w_i^j}
-                \end{align*}
-                If this implied order is wrong, swapping thread identities will  give us the following relations 
-                \begin{align*}
-                    \reln{w_i^j}{iwo}{w_m^j} \ \wedge \ \reln{w_m^j}{iwo}{w_k^j}  
-                \end{align*}  
-                Here, there is no implied write order relation between $w_i^j$ and $w_k^j$, hence we can consider them as remaining fixed. 
-                If the implied order between $w_m^j$ and $w_k^j$ is wrong, swapping it will result in the following relations
-                \begin{align*}
-                    \reln{w_i^j}{iwo}{w_k^j} \ \wedge \ \reln{w_k^j}{iwo}{w_m^j}  
-                \end{align*}  
-                Here, the implied write order between $w_i^j$ and $w_k^j$ remains the same. Thus, for this case, we can conclude that the   relation remains "fixed".
+            \paragraph{Case1 : The writes are above the read} 
+                
+                \begin{itemize}
+                    \item Part 1: There exists an implied write order between $w_i^j$ and some $w_m^j$
+                    
+                        Because Prop \ref{prop7} and $\reln{w_i^j}{iwo}{w_k^j}$, other implied write orders with $w_i^j$ can be of the form:
+                        \begin{align*}
+                            \reln{w_m^j}{iwo}{w_i^j}
+                        \end{align*}
+                        If this implied order is wrong, swapping thread identities will  give us the following relations 
+                        \begin{align*}
+                            \reln{w_i^j}{iwo}{w_m^j} \ \wedge \ \reln{w_m^j}{iwo}{w_k^j}  
+                        \end{align*}  
+                        Here, there is no implied write order relation between $w_i^j$ and $w_k^j$, hence we can consider them as remaining fixed. 
+                        If the implied order between $w_m^j$ and $w_k^j$ is wrong, swapping it will result in the following relations
+                        \begin{align*}
+                            \reln{w_i^j}{iwo}{w_k^j} \ \wedge \ \reln{w_k^j}{iwo}{w_m^j}  
+                        \end{align*}  
+                        Here, the implied write order between $w_i^j$ and $w_k^j$ remains the same. Thus, for this case, we can conclude    that   the   relation remains "fixed".
 
-            \paragraph{Case2} 
-                By Prop \ref{prop7}, implied write orders with $w_k^j$ can be of the forms:
-                \begin{align*}
-                    \reln{w_k^j}{iwo}{w_m^j} \\
-                    \reln{w_m^j}{iwo}{w_k^j} 
-                \end{align*} 
-                The first form is symmetric to Case1, hence we only consider the second form. 
+                    \item Part 2: There exists an implied write order between $w_k^j$ and some $w_m^j$
+                
+                        By Prop \ref{prop7}, implied write orders with $w_k^j$ can be of the forms:
+                        \begin{align*}
+                            \reln{w_k^j}{iwo}{w_m^j} \\
+                            \reln{w_m^j}{iwo}{w_k^j} 
+                        \end{align*} 
+                        The first form is symmetric to Case1, hence we only consider the second form. 
 
-                If this implied write order is wrong, swapping thread identities will give us the following relations. 
-                \begin{align*}
-                    \reln{w_i^j}{iwo}{w_m^j} \ \wedge \ \reln{w_k^j}{iwo}{w_m^j}
-                \end{align*}
-                Here, there is no implied write order relation between $w_i^j$ and $w_k^j$, hence we can consider them as remaining fixed. 
+                        If this implied write order is wrong, swapping thread identities will give us the following relations. 
+                        \begin{align*}
+                            \reln{w_i^j}{iwo}{w_m^j} \ \wedge \ \reln{w_k^j}{iwo}{w_m^j}
+                        \end{align*}
+                        Here, there is no implied write order relation between $w_i^j$ and $w_k^j$, hence we can consider them as remaining fixed. 
 
-                If the implied write order between $w_m^j$ and $w_i^j$ is wrong, swapping their threads will give us 
-                \begin{align*}
-                    \reln{w_m^j}{iwo}{w_i^j} \ \wedge \ \reln{w_k^j}{iwo}{w_i^j}  
-                \end{align*}
-                thus making our claim invalid. To show that this state is not possible, note firstly that from the initial configuration, we    can infer by Def \ref{SymMemO} and Prop \ref{prop1}:
-                \begin{align*}
-                    \reln{w_i^j}{smo}{w_k^j} \ \wedge \ \reln{w_k^j}{smo}{w_m^j}
-                \end{align*} 
-                Because $smo$ is a total order w.r.t. one set of writes, we have by transitivity. 
-                \begin{align*}
-                    \reln{w_i^j}{smo}{w_m^j}
-                \end{align*}
-                After swapping threads $T_k$ and $T_m$, we get $\reln{w_i^j}{iwo}{w_m^j}$ which respects the irreflexivity constraint Prop \ref {prop1}. Hence, this implied write order is not wrong. Thus we cannot have the case which results in $\reln{w_k^j}{iwo}{w_i^j}   $.  
+                        If the implied write order between $w_m^j$ and $w_i^j$ is wrong, swapping their threads will give us 
+                        \begin{align*}
+                            \reln{w_m^j}{iwo}{w_i^j} \ \wedge \ \reln{w_k^j}{iwo}{w_i^j}  
+                        \end{align*}
+                        thus making our claim invalid. To show that this state is not possible, note firstly that from the initial  configuration,   we    can infer by Def \ref{SymMemO} and Prop \ref{prop1}:
+                        \begin{align*}
+                            \reln{w_i^j}{smo}{w_k^j} \ \wedge \ \reln{w_k^j}{smo}{w_m^j}
+                        \end{align*} 
+                        Because $smo$ is a total order w.r.t. one set of writes, we have by transitivity. 
+                        \begin{align*}
+                            \reln{w_i^j}{smo}{w_m^j}
+                        \end{align*}
+                        After swapping threads $T_k$ and $T_m$, we get $\reln{w_i^j}{iwo}{w_m^j}$ which respects the irreflexivity constraint   Prop  \ref {prop1}. Hence, this implied write order is not wrong. Thus we cannot have the case which results in $\reln{w_k^j}{iwo}{w_i^j}$.  
+                        
+                    \end{itemize}
 
-            \critic{red}{I do not think we can use WLOG for this and we must also write the case for writes below the read as they rely on property 8 for the proof.}
+            \paragraph{Case2: The writes are below the read} 
 
+                \begin{itemize}
+                    \item Part 1: There exists an implied write order between $w_i^j$ and some $w_m^j$
+                    
+                        By Prop \ref{prop8}, implied write order between $w_i^j$ and $w_m^j$ can be of two forms 
+                        \begin{align*}
+                            \reln{w_m^j}{iwo}{w_i^j} \\ 
+                            \reln{w_i^j}{iwo}{w_m^j}
+                        \end{align*}
+
+                        Considering the first form, if it is wrong, swapping it will result in the following relations 
+                        \begin{align*}
+                            \reln{w_i^j}{iwo}{w_m^j} \ \wedge \ \reln{w_m^j}{iwo}{w_k^j}
+                        \end{align*}
+                        Here, there is no implied write order relation between $w_i^j$ and $w_k^j$, hence we can consider them as remaining fixed. 
+
+                        If the implied write order between $w_m^j$ and $w_k^j$ is wrong, swapping their threads will give us
+                        \begin{align*}
+                            \reln{w_i^j}{iwo}{w_k^j} \ \wedge \ \reln{w_k^j}{iwo}{w_m^j}
+                        \end{align*} 
+                        Here, the implied write order between $w_i^j$ and $w_k^j$ remains the same, while we fixed the relations they had with $w_m^j$. Thus, for this case, we can conclude that the implied write order remains "fixed".
+
+                        Considering the second form, if it is wrong, swapping it will result in the following relations 
+                        \begin{align*}
+                            \reln{w_m^j}{iwo}{w_i^j} \ \wedge \ \reln{w_m^j}{iwo}{w_k^j}
+                        \end{align*}
+
+                        If the implied write order between $w_m^j$ and $w_i^j$ is wrong, swapping their threads will give us 
+                        \begin{align*}
+                            \reln{w_k^j}{iwo}{w_m^j} \ \wedge \ \reln{w_k^j}{iwo}{w_i^j}  
+                        \end{align*}
+                        thus making our claim invalid. To show that this state is not possible, note firstly that from the initial  configuration, we can infer by Def \ref{SymMemO} and Prop \ref{prop1} (given relation between $w_i^j$ and $w_m^j$ is wrong):
+                        \begin{align*}
+                            \reln{w_m^j}{smo}{w_i^j} \ \wedge \ \reln{w_i^j}{smo}{w_k^j}
+                        \end{align*}
+                        Because $smo$ is a total order w.r.t. one set of writes, we have by transitivity. 
+                        \begin{align*}
+                            \reln{w_m^j}{smo}{w_k^j}
+                        \end{align*}
+
+                        After swapping threads $T_i$ and $T_m$, we get $\reln{w_m^j}{iwo}{w_k^j}$ which respects the irreflexivity constraint Prop \ref{prop1}. Hence, this implied write order is not wrong. Thus we cannot have the case which results in $\reln{w_k^j}{iwo}{w_i^j}$.
+
+                    \item Part 2: There exists an implied write order between $w_k^j$ and some $w_m^j$
+                    
+                        By Prop \ref{prop8} and $\reln{w_i^j}{iwo}{w_k^j}$, relation between $w_k^j$ and $w_m^j$ can only be of one form 
+                        \begin{align*}
+                            \reln{w_k^j}{iwo}{w_m^j}
+                        \end{align*}
+                        This case is symmetric to the first form of Part 1, hence this case is already proved. 
+                
+                \end{itemize}
+ 
             Thus, for a given set of equal writes, once an implied write order is fixed, it remains fixed.
         \end{proof}
 
@@ -337,10 +396,10 @@
             (A more formal statement required? Discuss with Viktor)        
         \end{lemma}
 
-        \begin{proof}
-            Suppose, for a given set of equal writes, say of the form $w^j$ all the implied write orders are fixed. Without loss of generality, let us consider them to be wrties above the read. We consider two threads $T_i$ and $T_k$, between which an implied write order is wrong. Let those writes be $w_i^l$ and $w_k^l$. 
+        \begin{proof}{Part 1}
+            Suppose, for a given set of equal writes, say of the form $w^j$ all the implied write orders are fixed. Let us consider them to be wrties above the read. We consider two threads $T_i$ and $T_k$, between which an implied write order is wrong. Let those writes be $w_i^l$ and $w_k^l$. 
 
-            Once again, without loss of generality, let us consider the symmetric memory order between writes of $T_i$ and $T_k$ to be of the form $\reln{w_i}{smo}{w_k}$. Thus we have 
+            Without loss of generality, let us consider the symmetric memory order between writes of $T_i$ and $T_k$ to be of the form $\reln{w_i}{smo}{w_k}$. Thus we have 
             \begin{align*}
                 \reln{w_i^j}{smo}{w_k^j} \ \wedge \ \reln{w_i^l}{smo}{w_k^l}
             \end{align*}
@@ -482,6 +541,17 @@
             \critic{red}{Although the soundness proof is written completely, it requires proper formatting and references to the properties and definitions we wrote above. This will make it concicse and a lot of symmetric arguments can be avoided.}
         \end{proof}
 
-        
+        \begin{proof}{Part 2}
+            Suppose, for a given set of equal writes, say of the form $w^j$ all the implied write orders are fixed. Let us consider them to be wrties below the read. We consider two threads $T_i$ and $T_k$, between which an implied write order is wrong. Let those writes be $w_i^l$ and $w_k^l$. 
 
+            Without loss of generality, let us consider the symmetric memory order between writes of $T_i$ and $T_k$ to be of the form $\reln{w_i}{smo}{w_k}$. Thus we have 
+            \begin{align*}
+                \reln{w_i^j}{smo}{w_k^j} \ \wedge \ \reln{w_i^l}{smo}{w_k^l}
+            \end{align*}
+            We also have 
+            \begin{align*}
+                \reln{w_k^l}{iwo}{w_i^l}
+            \end{align*}
+            
+        \end{proof}
    
