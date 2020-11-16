@@ -145,7 +145,7 @@
         \begin{align*}
             \reln{w_i^l}{iwo}{w_k^l}.    
         \end{align*}
-        If the above is derived by $w_i^l;po;rf^{-1};w_k^l$, then by Prop \ref{Wabv} and Def \ref{ReadF}, it violates $\stck{_{rf}}$ functionality. Hence it can only be derived by $w_i^l;rf;po;w_k^l$. From Prop \ref{Wbel}, we can infer that the two writes are above the read and $T_k$'s read being satisfied.  
+        If the above is derived by $w_i^l;po;rf^{-1};w_k^l$, then by Prop \ref{Wabv} and Def \ref{ReadF}, it violates $\stck{_{rf}}$ functionality. Hence it can only be derived by $w_i^l;rf;po;w_k^l$. From Prop \ref{Wbel}, we can infer that the two writes are below the read and $T_k$'s read being satisfied.  
         
         Suppose a third impleid write order exists of the form 
         \begin{align*}
@@ -154,8 +154,6 @@
         If the above is derived by $w_i^n;po;rf^{-1};w_k^n$, then by Prop \ref{Wabv} and Def \ref{ReadF}, it violates $\stck{_{rf}}$ functionality. If the above is derived by $w_i^n;rf;po;w_k^n$, then by Prop \ref{Wbel} and Def \ref{ReadF}, it violates $\stck{_{rf}}$ functionality.
         
         Hence, we cannot have any more implied write orders between $T_i$ and $T_j$, thus verifying our property. 
-
-        \critic{red}{Have not considered the from $\reln{w_k^l}{iwo}{w_i^l}$, which I can eliminate through violation of coherence.}
     \end{proof}
         
 %--------------------------------------------------------------------------------------------------------------------------------------
@@ -169,26 +167,20 @@
         
         Consider our two threads $T_i$ and $T_k$. 
 
-        If each of their read reads from its own write, we have no implied write order established, thus maintaining the property.
-        
-        If each read reads from another thread's (say $T_m$), write, we have no implied write order established between $T_i$ and $T_j$'s writes.. (I do not know how to complete the sentence.)
-
-        For cases where implied write orders are established between wrties of $T_i$ and $T_j$, without loss of generality, let us consider one between writes above the read which respect Prop \ref{prop1}; 
+        For cases where implied write orders are established between wrties of $T_i$ and $T_j$, let us first consider one between writes above the read which respect Prop \ref{prop1}; 
         \begin{align*}
             \reln{w_i^j}{iwo}{w_k^j} \ \wedge \ \reln{w_i^j}{smo}{w_k^j}
         \end{align*}
         By Prop \ref{Wabv}, the implied write order satisfies $T_i$'s read by a reads-from relation with $w_k^j$. 
 
-        The other set of implied write order, by Prop \ref{prop5} can only be between writes below the read. Suppose we have such an order but not respecting Prop \ref{prop1}:
+        The other set of implied write order, by Prop \ref{prop4} can only be between writes below the read. Suppose we have such an order but not respecting Prop \ref{prop1}:
         \begin{align*}
             \reln{w_k^l}{iwo}{w_i^l} \ \wedge \ \reln{w_i^l}{smo}{w_k^l}
         \end{align*}
-        By Prop \ref{Wbel}, this implies another $\stck{_{rf}}$ relation with $T_i$'s read. By Def \ref{ReadF} this should not be allowed. Hence we can only have an implied write order respecting Prop \ref{prop1}.
+        By Prop \ref{Wbel}, this implies another $\stck{_{rf}}$ relation with $T_i$'s read. By Def \ref{ReadF} this violates the functional property of $\stck{_{rf}}$. Hence we can only have an implied write order respecting Prop \ref{prop1}.
         \begin{align*}
             \reln{w_i^l}{iwo}{w_k^l} \ \wedge \ \reln{w_i^l}{smo}{w_k^l}
         \end{align*}
-
-        \critic{red}{The last argument seems incomplete. But perhaps compliant / non-compliant is a binary argument. So if one does not hold, the other should. There is no other option.}
 
         By symmetry, if the implied write order between writes above the read did not respect Prop \ref{prop1}, then so would the writes below the read.  
     \end{proof}
@@ -255,21 +247,29 @@
     \end{proof}
 
 %----------------------------------------------------------------------------------------------------------------------------------------
+%----------------------------------------------------------------------------------------------------------------------------------------
 
     \subsubsection{Soundness}
 
-        To prove that our rules our sound, we show that for every implied write order such that $smo;iwo$ is reflexive, by Prop \ref{prop3} we can reverse them by swapping thread identities, thus respectiing our irreflexivity constraint. 
+        To prove that our rules are sound, we need to show that for every execution graph that does not respect the irreflexivity constraint, there is a symmetric execution that does respect and hence covered by our rules. 
         
-        However, we must ensure that once write orders are "fixed" in this fashion, they remain fixed, i.e. the relation cannot appear again to be wrong. 
-        For this, we first need to ensure that implied write orders do not form a cycle. By Prop \ref{prop6}, this is indeed the case. 
+        By Prop \ref{prop1}, we can infer that an execution not respectiing our irreflexivity constraint will have implied write orders which are "incorrect". 
+
+        \critic{red}{Perhaps put Incorrect implied write orders as a definition??}
         
-        Given they are acyclic, we need to show that once fixed by Prop \ref{prop3}, they remain fixed. 
-        Lastly, we need to show that this holds in general given multiple sets of equal writes that needs fixing.  
+        By Prop \ref{prop3}, we can swap thread identities to reverse implied write orders, thus "fixing" implied write orders, which then can make the resultant execution respect our rules. 
+
+        If we can show this process of "fixing" implied write orders is terminating, our soundness proof is complete. 
+
+        For this, we first need to ensure that implied write orders do not form a cycle. As "fixing" them may not terminate.  By Prop \ref{prop6}, we have that $\stck{_{iwo}}$ is acyclic, hence they do not form a cycle.  
+        
+        Given this, we show that for one given set of equal writes, swapping thread identities will always result in the implied write orders respecting Prop \ref{prop1}. 
+        Finally, we show that this holds in general given multiple sets of equal writes.  
 
 %------------------------------------------------------------------------------------------------------------------------------------------
 
         \begin{lemma}
-            For a given set of equal writes, once an implied write order is fixed, it remains fixed. 
+            For one given set of equal writes, every implied write order that is "incorrect", can be fixed and will remain fixed.  
             (A more formal statement required perhaps?)
         \end{lemma}
             
@@ -497,7 +497,7 @@
                             \reln{w_i^j}{smo}{w_k^j} \ \wedge \ \reln{w_i^j}{iwo}{w^j}
                         \end{align*}
 
-                        For $\reln{w^j}{iwo}{w_k^j}$ to have been there before, we need an event $x$ to connect, hence by possible implied  write    orders one can have with $w^j$ and $w_k^j$, we need an $x$ such that one of the conditions below hold
+                        For $\reln{w^j}{iwo}{w_k^j}$ to have been there before, we need an event $x$ to connect, hence by possible implied write orders one can have with $w^j$ and $w_k^j$, we need an $x$ such that one of the conditions below hold
                         \begin{align*}
                             \reln{w^j}{iwo}{x} \ \wedge \ \reln{x}{iwo}{w_k^j} \\ 
                             \reln{x}{iwo}{w^j} \ \wedge \ \reln{x}{iwo}{w_k^j}
@@ -526,7 +526,7 @@
                             \reln{w_i^j}{smo}{w_k^j} \ \wedge \ \reln{w^j}{iwo}{w_k^j}
                         \end{align*}
 
-                        For $\reln{w^j}{iwo}{w_i^j}$ to have been there before, we need an event $x$ to connect, hence by possible implied  write    orders one can have with $w^j$ and $w_k^j$. By Prop \ref{prop7}, $w^j$ can only have relations of the form  $\reln{w}{iwo}  {w^j}$. Thusm we have the possible two forms of relations that could exist:
+                        For $\reln{w^j}{iwo}{w_i^j}$ to have been there before, we need an event $x$ to connect, hence by possible implied  write    orders one can have with $w^j$ and $w_k^j$. By Prop \ref{prop7}, $w^j$ can only have relations of the form  $\reln{w}{iwo}{w^j}$. Thusm we have the possible two forms of relations that could exist:
                         \begin{align*}
                             \reln{x}{iwo}{w^j} \ \wedge \ \reln{w_i^j}{iwo}{x} \\
                             \reln{x}{iwo}{w^j} \ \wedge \ \reln{x}{iwo}{w_i^j} \\ 
@@ -620,9 +620,72 @@
 
                 \begin{itemize}
                     \item Part 1: There exists an implied write order between another write $w^j$ and $w_i^j$.
+                        By Prop \ref{prop8} and Prop \ref{Wbel}, implied write order between $w^j$ and $w_i^j$ can be of the form 
+                        \begin{align*}
+                            \reln{w_i^j}{iwo}{w^j}
+                        \end{align*}
+
+                        By Prop \ref{prop1}, on swapping, we have the following relations 
+                        \begin{align*}
+                            \reln{w_i^l}{iwo}{w_k^l} \\ 
+                            \reln{w_k^j}{iwo}{w^j}
+                        \end{align*}
+
+                        The latter relation may not respect our irreflexivity constraint. To show that this relation could not have been there before and thus can be fixed by Lemma 1, consider the original configuration
+                        \begin{align*}
+                            \reln{w_i^j}{iwo}{w^j} \ \wedge \ \reln{w_i^j}{smo}{w_k^j}
+                        \end{align*}
+
+                        For $\reln{w_k^j}{iwo}{w^j}$ to have been there before, we need an event $x$ to connect, having implied write orders with both. By Prop \ref{prop8}, $w^j$ can only have relations of the form  $\reln{w^j}{iwo}{w}$. Thus we have the possible two forms of relations that could exist:
+                        \begin{align*}
+                            \reln{w^j}{iwo}{x} \ \wedge \ \reln{x}{iwo}{w_k^j} \\ 
+                            \reln{w^j}{iwo}{x} \ \wedge \ \reln{w_k^j}{iwo}{x}
+                        \end{align*}
+
+                        The first set of relations violate coherence ($po \cup rf$ acyclic), while the second set of relations is not possible as due to Prop \ref{prop8}, such an event $x$ cannot exist. 
+
+                        Thus, the implied write order if exists after swapping, is new and could not have occured before and hence, by Lemma 1, we can fix it and will remain fixed. 
 
                     \item Part 2: There exists an implied write order between another write $w^j$ and $w_i^j$.
                     
+                        By Prop \ref{prop8}, implied write orders between $w^j$ and $w_k^j$ can be of the form
+                        \begin{align*}
+                            \reln{w_k^j}{iwo}{w^j} \\ 
+                            \reln{w^j}{iwo}{w_k^j}
+                        \end{align*} 
+
+                        Taking the first form, by Prop \ref{prop1} and Def \ref{SymMemO}, we have 
+                        \begin{align*}
+                            \reln{w_k^j}{smo}{w^j} \ \wedge \ \reln{w_i^j}{smo}{w^j}
+                        \end{align*}
+
+                        By Prop \ref{prop3}, on swapping, we have 
+                        \begin{align*}
+                            \reln{w_i^l}{iwo}{w_k^l} \\ 
+                            \reln{w_i^j}{iwo}{w^j}                         
+                        \end{align*}
+
+                        None of the above relations violate the irreflexivity constraint Prop \ref{prop1}. Hence, for this case, we are done. 
+
+                        For the second form, on swapping we have 
+                        \begin{align*}
+                            \reln{w_i^l}{iwo}{w_k^l} \\ 
+                            \reln{w^j}{iwo}{w_i^j}
+                        \end{align*}
+
+                        The latter relation may not respect our irreflexivity constraint. To show that this relation could not have been there before and thus can be fixed by Lemma 1, consider the original configuration
+                        \begin{align*}
+                            \reln{w_i^j}{smo}{w_k^j} \ \wedge \ \reln{w^j}{iwo}{w_k^j}
+                        \end{align*}
+
+                        For $\reln{w^j}{iwo}{w_i^j}$ to have been there before, we need an event $x$ to connect, having implied write orders with both. By Prop \ref{prop8}, $w_i^j$ can only have relations of the form  $\reln{w_i^j}{iwo}{w}$. Thus we have the possible two forms of relations that could exist:
+                        \begin{align*}
+                            \reln{w_i^j}{iwo}{x} \ \wedge \reln{x}{iwo}{w^j} \\ 
+                            \reln{w_i^j}{iwo}{x} \ \wedge \reln{w^j}{iwo}{x} \\ 
+                        \end{align*}
+
+                        The first set of relations violate coherence, ($po \cup rf$ acyclic). While the second one, by Prop \ref{prop8}, such an $x$ cannot exist. Hence, our relation is new and could not have occured before, and thus can be fixed by Lemma 1 and remain fixed.
+
                 \end{itemize}
 
             
