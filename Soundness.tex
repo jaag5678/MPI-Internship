@@ -609,8 +609,11 @@
                                 %There could exist events w' and x' above the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_i^j, which could have also been fixed.
                                 %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{x'}{iwo}{w'}$.
                                 
-                                %TO BE DONE LATER
-                                \critic{blue}{To show the above case cannot be possible cause of the order in which we prescribe implied write orders should be resolved.}
+                                %The only way to get a configuration with $\reln{w_k^j}{iwo}{w^j}$ before would be to swap $T_x$ and $T'$ first, followed by swapping $T'$ and $T_k$. 
+                                %But this swapping order is not possible, as the "fixing" process we have is to fix implied write orders above read first and then below. In that sense, the de-swapping here can only be implied write orders below read and then above read. 
+                                %Since this is not possible in the above configuration, we can conclude that $\reln{w_k^j}{iwo}{w^j}$ did not exist before and hence could not have been fixed.
+                                
+                                \critic{blue}{The reader should note that though it was possible for the correct relation $\reln{w^j}{iwo}{w_k^j}$ to exist, it wasn't something that was "fixed" by swapping. This is different from those implied write orders which were fixed by swapping thread identities. (Discuss with Viktor on this)}
 
                                 %There could exist events w' and x' below the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_i^j, which could have also been fixed.
                                 %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{x'}{iwo}{w'}$.
@@ -681,8 +684,11 @@
                                 %There could exist events w' and x' above the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_i^j, which could have also been fixed.
                                 %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{w'}{iwo}{x'}$.
 
+                                %The only way to get a configuration with $\reln{w^j}{iwo}{w_i^j}$ before would be to swap $T_x$ and $T'$ first, followed by swapping $T'$ and $T_i$. 
+                                %But this swapping order is not possible, as the "fixing" process we have is to fix implied write orders above read first and then below. The de-swapping here can only be implied write orders below read and then above read. 
+                                %Since this is not possible in the above configuration, we can conclude that $\reln{w^j}{iwo}{w_i^j}$ did not exist before and hence could not have been fixed.
                                 %TO BE DONE LATER
-                                \critic{blue}{To show the above case cannot be possible cause of the order in which we prescribe implied write orders should be resolved.}
+                                \critic{blue}{The reader should note that though it was possible for the correct relation $\reln{w^j}{iwo}{w_k^j}$ to exist, it wasn't something that was "fixed" by swapping. This is different from those implied write orders which were fixed by swapping thread identities. (Discuss with Viktor on this)}
 
                                 %There could exist events w' and x' below the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_i^j, which could have also been fixed.
                                 %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{w'}{iwo}{x'}$.
@@ -815,6 +821,14 @@
                                 %There could exist events w' and x' below the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_i^j, which could have also been fixed.
                                 %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{w'}{iwo}{x'}$
 
+                                %The only way to get a configuration with $\reln{w_k^j}{iwo}{w^j}$ before would be to swap $T_x$ and $T'$ first, followed by swapping $T'$ and $T_i$. 
+                                %On swapping $T_x$ and $T'$, we have the following configuration 
+                                \begin{align*}
+                                    \reln{x'}{iwo}{w'} \ \wedge \ \reln{w_k^l}{iwo}{w_i^l} \ \wedge \ \reln{w^j}{iwo}{w_k^j} \ \wedge \ \reln{x}{iwo}{w_i^j} 
+                                \end{align*}
+                                %If this was the original configuration of execution, we can note that $\reln{w_k^l}{iwo}{w_i^l}$ would be fixed first as it is between writes above the read, in contrast to $\reln{x'}{iwo}{w'}$. Hence, it is not possible to have gotten our intended execution graph from this configuration. Thus, we can conclude that $\reln{w_k^j}{iwo}{w^j}$ could not have been fixed before.  
+
+                                %Since this is not possible in the above configuration, we can conclude that $\reln{w^j}{iwo}{w_i^j}$ did not exist before and hence could not have been fixed.
                                 %TO BE ADDRESSED SEPARATELY
 
                             \item Case where $\reln{x}{smo}{w^j} \ \wedge \ \reln{x}{iwo}{w_k^j}$
@@ -846,6 +860,12 @@
                                 %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{w'}{iwo}{x'}$
                                 
                                 %TO BE ADDRESSED SEPARATELY
+                                %The only way to get a configuration with $\reln{w^j}{iwo}{w_i^j}$ before would be to swap $T_x$ and $T'$ first, followed by swapping $T'$ and $T_i$. 
+                                %On swapping $T_x$ and $T'$, we have the following configuration 
+                                \begin{align*}
+                                    \reln{x'}{iwo}{w'} \ \wedge \ \reln{w_k^l}{iwo}{w_i^l} \ \wedge \ \reln{w_i^j}{iwo}{w^j} \ \wedge \ \reln{x}{iwo}{w_i^j} 
+                                \end{align*}
+                                %If this was the original configuration of execution, we can note that $\reln{w_k^l}{iwo}{w_i^l}$ would be fixed first as it is between writes above the read, in contrast to $\reln{x'}{iwo}{w'}$ which is between writes below the read. Hence, it is not possible to have gotten our intended execution graph from this configuration. Thus, we can conclude that $\reln{w^j}{iwo}{w_i^j}$ could not have been fixed before.
 
                             \item Case where $\reln{x}{smo}{w^j} \ \wedge \ \reln{w_i^j}{iwo}{x}$
                                 %There could exist events w' and x' below the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_i^j, which could have also been fixed.
@@ -868,479 +888,3 @@
                 In summary, we can conclude that new implied write orders among other set of writes introduced while fixing an implied write order, if wrong cannot have been resolved earlier, and thus, by Lemma \ref{lemma1} can be fixed and will remain fixed.
 
         \end{proof}
-
-        \begin{proof}{Part 1}
-            Suppose, for a given set of equal writes, say of the form $w^j$ all the implied write orders are fixed. Let us consider them to be wrties above the read. We consider two threads $T_i$ and $T_k$, between which an implied write order is wrong. Let those writes be $w_i^l$ and $w_k^l$. 
-
-            Without loss of generality, let us consider the symmetric memory order between writes of $T_i$ and $T_k$ to be of the form $\reln{w_i}{smo}{w_k}$. Thus we have 
-            \begin{align*}
-                \reln{w_i^j}{smo}{w_k^j} \ \wedge \ \reln{w_i^l}{smo}{w_k^l}
-            \end{align*}
-
-            We assume write order is wrong between $w_i^l$ and $w_k^l$
-            \begin{align*}
-                \reln{w_k^l}{iwo}{w_i^l}
-            \end{align*} 
-            There cannot be an implied write order between $w_i^j$ and $w_k^j$, by Prop \ref{prop5}. 
-
-            \paragraph{Case1: $w^l$ is below the read.}
-                
-                \begin{itemize}
-                    \item Part1: There exists an implied write order between another write $w^j$ and $w_i^j$. 
-
-                        By \ref{prop7} and $\reln{w_k^l}{iwo}{w_i^l}$, thus satisfying $T_i$'s read, $w_i^j$ can only be involved in implied    write orders of the form 
-                        \begin{align*}
-                            \reln{w^j}{iwo}{w_i^j}
-                        \end{align*}
-                        From our assumption of implied write orders among $w^j$ are fixed already, we have
-                        \begin{align*}
-                            \reln{w^j}{smo}{w_i^j} 
-                        \end{align*} 
-                        By Def \ref{SymMemO}, we then have $\reln{w^j}{smo}{w_k^j}$.
-
-                        By Prop \ref{prop3}, swapping $T_i$ and $T_k$ to fix $\reln{w_k^l}{iwo}{w_i^j}$, gives us the following new relations.
-                        \begin{align*}
-                            \reln{w_i^l}{iwo}{w_k^j} \\
-                            \reln{w^j}{iwo}{w_k^j}
-                        \end{align*}
-                        Both these relations repsect our irreflexivity constraint Prop \ref{prop1}. Thus, concluding this part. 
-
-                    \item Part2: There exists an implied write order between another write $w^j$ and $w_k^j$. 
-
-                        By Prop \ref{prop7}, $w_k^j$ can be involved in implied write orders of the form
-                        \begin{align*}
-                            \reln{w_k^j}{iwo}{w^j} \\
-                            \reln{w^j}{iwo}{w_k^j} 
-                        \end{align*}
-                        The first is symmetric to Part1, hence we only consider the second form. 
-
-                        By Prop \ref{prop3}, on swapping $T_i$ and $T_k$, we get the following new relations:
-                        \begin{align*}
-                            \reln{w_i^l}{iwo}{w_k^j} \\
-                            \reln{w^j}{iwo}{w_i^j}
-                        \end{align*}
-
-                        The second one may not be compliant to the irreflexivity condition Prop \ref{prop1}, hence can be a new implied    relation which is wrong. To show that this can be fixed and will remain fixed, we need to show that this is new and could have not occurred before while swapping threads to fix implied write orders of $w^j$. 
-
-                        Consider the original configuration we have 
-                        \begin{align*}
-                            \reln{w_i^j}{smo}{w_k^j} \ \wedge \ \reln{w^j}{iwo}{w_k^j}
-                        \end{align*}
-
-                        For $\reln{w^j}{iwo}{w_k^j}$ to have been there before, we can have the following cases 
-                        
-                        1.There must be a write $x$, say, such that 
-                        \begin{align*}
-                            \reln{x}{iwo}{w_i^j} \ \wedge \ \reln{x}{iwo}{w^j}
-                        \end{align*}
-                        By Prop \ref{prop7}, such an $x$ cannot exist, Hence, such a relation could have not been there before, and hence was not fixed before.
-
-                        2. There must be a write $x$ such that 
-                        \begin{align*}
-                            \reln{x}{iwo}{w_i^j} \ \wedge \ \reln{x}{smo}{w^j}
-                        \end{align*}
-
-                        There could have been an instance where $T_x$ and $T$ were swapped, to fix some other implied write order between writes. 
-                        Let us call those writes to be $x'$ and $w'$ respectively.
-                        Then by Def \ref{SymMemO}, we can infer 
-                        \begin{align*}
-                            \reln{x'}{smo}{w'} \wedge \reln{x'}{iwo}{w'}
-                        \end{align*}
-                        
-                        Suppose they are writes below the read.                         
-                        By Prop \ref{Wabv} and \ref{prop7}, $T$'s read has already been satisfied. By Prop \ref{prop8} and \ref{Wbel}, we can infer that $\reln{x'}{iwo}{w'}$ cannot exist. Hence, such an $x$ cannot exist. 
-                        
-                        Suppose they are writes above the read.
-                        The set of relations result in $po \cup rf^{-1}$ cycle which violates coherence.  
-
-                        3. There must be a write $x$ such that 
-                        \begin{align*}
-                            \reln{x}{iwo}{w_i^j} \ \wedge \ \reln{w^j}{smo}{x}
-                        \end{align*}
-
-                        There could have been an instance where $T_x$ and $T$ were swapped, to fix some other implied write order between writes. 
-                        Let us call those writes to be $x'$ and $w'$ respectively.
-                        
-                        Then by Def \ref{SymMemO}, we can infer 
-                        \begin{align*}
-                            \reln{w'}{smo}{x'} \wedge \reln{w'}{iwo}{x'}
-                        \end{align*}
-
-                        Suppose they are writes below the read. 
-                        By Prop \ref{Wabv} and \ref{prop7}, $T_x$'s read has already been satisfied. By Prop \ref{prop8} and \ref{Wbel}, we can infer that $\reln{w'}{iwo}{x'}$ cannot exist. Hence, such an $x$ cannot exist. 
-                        
-                        Suppose they are writes above the read.
-                        The set of relations result in $po \cup rf^{-1}$ cycle which violates coherence.  
-
-                        4. There must be a write $x$ such that 
-                        \begin{align*}
-                            \reln{x}{smo}{w_i^j} \ \wedge \ \reln{x}{iwo}{w^j}
-                        \end{align*}
-
-                        There could have been an instance where $T_x$ and $T_i$ were swapped, to fix some other implied write order between writes. 
-                        Let us call those writes to be $x'$ and $w'_i$ respectively.
-                        
-                        Then by Def \ref{SymMemO}, we can infer 
-                        \begin{align*}
-                            \reln{x'}{smo}{w'_i} \wedge \reln{x'}{iwo}{w'_i}
-                        \end{align*}
-
-                        Suppose they are writes below the read. 
-                        By Prop \ref{Wabv} and \ref{prop7}, $T_i$'s read has already been satisfied. By Prop \ref{prop8} and \ref{Wbel}, we can infer that $\reln{x'}{iwo}{w'_i }$ cannot exist. Hence, such an $x$ cannot exist.
-                        
-                        Suppose they are writes above the read.
-                        The set of relations result in $po \cup rf^{-1}$ cycle which violates coherence.  
-
-                        5. There must be a write $x$ such that 
-                        \begin{align*}
-                            \reln{w_i^j}{smo}{x} \ \wedge \ \reln{x}{iwo}{w^j}
-                        \end{align*}
-                        
-                        There could have been an instance where $T_x$ and $T_i$ were swapped, to fix some other implied write order between writes. 
-                        Let us call those writes to be $x'$ and $w'_i$ respectively.
-                        
-                        Then by Def \ref{SymMemO}, we can infer 
-                        \begin{align*}
-                            \reln{w'_i}{smo}{x'} \wedge \reln{w'_i}{iwo}{x'}
-                        \end{align*}
-
-                        Suppose they are writes below the read. 
-                        By Prop \ref{Wabv} and \ref{prop7}, $T_x$'s read has already been satisfied. By Prop \ref{prop8} and \ref{Wbel}, we can infer that $\reln{w'_i}{iwo}{x'}$ cannot exist. Hence, such an $x$ cannot exist.
-                        
-                        Suppose they are writes above the read.
-                        The set of relations result in $po \cup rf^{-1}$ cycle which violates coherence.  
-
-                        \critic{blue}{For this case, we can also have an $x$ such that it only has an smo with one of the two events and an implied write order with the other. As swapping them might be needed to fix some other implied write order.}
-
-                \end{itemize}
-                    Now that this new relation exists, fixing it, will keep it remain fixed, by our first part of proof (label them please. 
-                    
-            
-            \paragraph{Case2: $w^l$ is above the read.}
-                
-                \begin{itemize}
-                    \item Part1: There exists an implied write order between another write $w^j$ and $w_i^j$.
-
-                        Since $T_i$'s read is still free, $w_i^j$ can have implied write orders with $w^j$ of the form
-                        \begin{align*}
-                            \reln{w^j}{iwo}{w_i^j} \\
-                            \reln{w_i^j}{iwo}{w^j} 
-                        \end{align*}
-
-                        For the first form of relation, note that we also have by Prop \ref{prop1} and by Def \ref{SymMemO}, 
-                        \begin{align*}
-                            \reln{w^j}{smo}{w_i^j} \ \wedge \ \reln{w^j}{smo}{w_k^j}
-                        \end{align*}
-
-                        By Prop \ref{prop3} on swapping two threads $T_i$ and $T_k$, we have 
-                        \begin{align*}
-                            \reln{w_i^l}{iwo}{w_k^j} \\
-                            \reln{w^j}{iwo}{w_k^j}
-                        \end{align*}
-
-                        Both relations respect our irreflexivity constraint.  Hence, maintaining that new implied write order relations with $w^j$ are not wrong.
-
-                        For the second form, while we swap threads $T_i$ and $T_k$, we get the following new relations (correct his)
-                        \begin{align*}
-                            \reln{w_i^l}{iwo}{w_k^j} \\
-                            \reln{w_k^j}{iwo}{w^j}
-                        \end{align*}
-                        The second relation may not be compliant to the irreflexivity condition, hence can be a new implied relation which  is   wrong. To show that this is new and could have not occurred before while swapping threads to fix implied write  orders of  $w^j$, consider the original configuration we have 
-                        \begin{align*}
-                            \reln{w_i^j}{smo}{w_k^j} \ \wedge \ \reln{w_i^j}{iwo}{w^j}
-                        \end{align*}
-
-                        For $\reln{w^j}{iwo}{w_k^j}$ to have been there before, we need an event $x$ to connect, hence by possible implied write orders one can have with $w^j$ and $w_k^j$, 
-                        
-                        1. We need an $x$ such that one of the conditions below hold
-                        \begin{align*}
-                            \reln{w^j}{iwo}{x} \ \wedge \ \reln{x}{iwo}{w_k^j} \\ 
-                            \reln{x}{iwo}{w^j} \ \wedge \ \reln{x}{iwo}{w_k^j}
-                        \end{align*}
-
-                        The first condition violates coherence ($po \cup rf_{-1}$ acylcic), while the second condition cannot hold as such an event $x$ cannot exist due to property x (number the properties).
-
-                        %--------------------------------------
-
-                        2. We need an $x$ such that 
-                        \begin{align*}
-                            \reln{x}{iwo}{w_k^j} \ \wedge \ \reln{x}{smo}{w^j}
-                        \end{align*}
-
-                        There could have been an instance where $T_x$ and $T$ were swapped, to fix some other implied write order between writes. 
-                        Let us call those writes to be $x'$ and $w'$ respectively.
-                        Then by Def \ref{SymMemO}, we can infer 
-                        \begin{align*}
-                            \reln{x'}{smo}{w'} \wedge \reln{x'}{iwo}{w'}
-                        \end{align*}
-                        
-                        Suppose they are writes above the read.                         
-                        By Prop \ref{Wabv} and \ref{prop7}, $T_x$'s read has already been satisfied. By Prop \ref{prop7} and \ref{Wabv}, we can infer that $\reln{x'}{iwo}{w'}$ cannot exist. Hence, such an $x$ cannot exist. 
-                        
-                        Suppose they are writes below the read.
-                        The set of relations result in $po \cup rf^{-1}$ cycle which violates coherence.  
-
-                        
-
-                        Thus, such a relation could have not been there before, and hence was not fixed. 
-
-                        \critic{red}{Write the above argument better please.}
-
-                    \item Part2: There exists an implied write order between another write $w^j$ and $w_k^j$.
-
-                        Since $T_k$'s read is already established in a reads-from relation, by Prop \ref{prop7}, $w_k^j$ can have implied   write     orders with some $w^j$ only of the form 
-                        \begin{align*}
-                            \reln{w^j}{iwo}{w_k^j}
-                        \end{align*}
-
-                        By Prop \ref{prop3}, swapping thread identities $T_i$ and $T_k$ will give us the following relations 
-                        \begin{align*}
-                            \reln{w_i^l}{iwo}{w_k^l} \\ 
-                            \reln{w^j}{iwo}{w_i^j} 
-                        \end{align*}
-                        The second relation may not be compliant to the irreflexivity condition, hence can be a new implied relation which  is   wrong. To show that this is new and could have not occurred before while swapping threads to fix implied write  orders of  $w^j$, consider the original configuration we have 
-                        \begin{align*}
-                            \reln{w_i^j}{smo}{w_k^j} \ \wedge \ \reln{w^j}{iwo}{w_k^j}
-                        \end{align*}
-
-                        For $\reln{w^j}{iwo}{w_i^j}$ to have been there before, we need an event $x$ to connect, hence by possible implied  write    orders one can have with $w^j$ and $w_k^j$. By Prop \ref{prop7}, $w^j$ can only have relations of the form  $\reln{w}{iwo}{w^j}$. Thusm we have the possible two forms of relations that could exist:
-                        \begin{align*}
-                            \reln{x}{iwo}{w^j} \ \wedge \ \reln{w_i^j}{iwo}{x} \\
-                            \reln{x}{iwo}{w^j} \ \wedge \ \reln{x}{iwo}{w_i^j} \\ 
-                        \end{align*}
-
-                        The second form cannot exist due to Prop \ref{prop7}. While the first form could exist, it violates coherence ($po  \cup rf_ {-1}$ acylcic). 
-
-                        Thus, such a relation could have not been there before, and hence was not fixed. 
-
-                \end{itemize}
-            
-            \critic{red}{Although the soundness proof is written completely, it requires proper formatting and references to the properties and definitions we wrote above. This will make it concicse and a lot of symmetric arguments can be avoided.}
-        \end{proof}
-
-        \begin{proof}{Part 2}
-            Suppose, for a given set of equal writes, say of the form $w^j$ all the implied write orders are fixed. Let us consider them to be wrties below the read. We consider two threads $T_i$ and $T_k$, between which an implied write order is wrong. Let those writes be $w_i^l$ and $w_k^l$. 
-
-            Without loss of generality, let us consider the symmetric memory order between writes of $T_i$ and $T_k$ to be of the form $\reln{w_i}{smo}{w_k}$. Thus we have 
-            \begin{align*}
-                \reln{w_i^j}{smo}{w_k^j} \ \wedge \ \reln{w_i^l}{smo}{w_k^l}
-            \end{align*}
-            We also have 
-            \begin{align*}
-                \reln{w_k^l}{iwo}{w_i^l}
-            \end{align*}
-
-            There cannot be an implied write order between $w_i^j$ and $w_k^j$, by Prop \ref{prop5}. 
-
-            \paragraph{Case 1: $w^l$ is above the read.}
-
-                \begin{itemize}
-                    \item Part 1: There exists an implied write order between another write $w^j$ and $w_i^j$.
-
-                        By Prop \ref{prop8}, implied write orders between some $w^j$ and $w_i^j$ can only be of the form:
-                        \begin{align*}
-                            \reln{w^j}{iwo}{w_i^j}
-                            \reln{w_i^j}{iwo}{w^j}
-                        \end{align*}
-
-                        For the first form of relation, note that we also have by Prop \ref{prop1} and by Def \ref{SymMemO}, 
-                        \begin{align*}
-                            \reln{w^j}{smo}{w_i^j} \ \wedge \ \reln{w^j}{smo}{w_k^j}
-                        \end{align*}
-
-                        By Prop \ref{prop3} on swapping threads $T_i$ and $T_j$, we have 
-                        \begin{align*}
-                            \reln{w_i^l}{iwo}{w_k^l} \\ 
-                            \reln{w^j}{iwo}{w_k^j}
-                        \end{align*}
-                        Both these relations respect our irreflexivity constraint Prop \ref{prop1}, hence we can conclude this case. 
-
-                        For the second form of relation, note that after swapping we have 
-                        \begin{align*}
-                            \reln{w_i^l}{iwo}{w_k^l} \\ 
-                            \reln{w_k^j}{iwo}{w^j}    
-                        \end{align*}
-
-                        The latter relation may not respect our irreflexivity constraint, and hence can be wrong. To show that this implied write order could not have existed and hence fixed before, we observe the original configuration
-                        \begin{align*}
-                            \reln{w_i^j}{iwo}{w^j} \ \wedge \reln{w_i^j}{smo}{w_k^j}
-                        \end{align*}
-
-
-                        To have had $\reln{w_k^j}{iwo}{w^j}$ before, we have the following cases to address:
-                        1.There must have been an event $x$ such that 
-                        \begin{align*}
-                            \reln{w^j}{iwo}{x} \ \wedge \ \reln{w_k^j}{iwo}{x}                            
-                        \end{align*} 
-                        By Prop \ref{prop8}, such an event cannot exist. 
-                        
-                        %---------------------------
-                        2.There must be an $x$ such that 
-                        \begin{align*}
-                            \reln{w_k^j}{iwo}{x} \ \wedge \ \reln{w^j}{smo}{x}
-                        \end{align*}
-
-                        There could have been an instance where $T_x$ and $T$ were swapped, to fix some other implied write order between writes. 
-                        Let us call those writes to be $x'$ and $w'$ respectively.
-                        Then by Def \ref{SymMemO}, we can infer 
-                        \begin{align*}
-                            \reln{w'}{smo}{x'} \wedge \reln{w'}{iwo}{x'}
-                        \end{align*}
-                        
-                        Suppose they are writes above the read.                         
-                        By Prop \ref{Wbel} and \ref{prop8}, $T$'s read has already been satisfied. By Prop \ref{prop7} and \ref{Wabv}, we can infer that $\reln{w'}{iwo}{x'}$ cannot exist. Hence, such an $x$ cannot exist. 
-                        
-                        Suppose they are writes below the read.
-                        The set of relations result in $po \cup rf$ cycle which violates coherence.  
-
-                        3.There must be an $x$ such that 
-                        \begin{align*}
-                            \reln{w_k^j}{iwo}{x} \ \wedge \ \reln{x}{smo}{w^j}
-                        \end{align*}
-
-                        There could have been an instance where $T_x$ and $T$ were swapped, to fix some other implied write order between writes. 
-                        Let us call those writes to be $x'$ and $w'$ respectively.
-                        Then by Def \ref{SymMemO}, we can infer 
-                        \begin{align*}
-                            \reln{x'}{smo}{w'} \wedge \reln{x'}{iwo}{w'}
-                        \end{align*}
-                        
-                        Suppose they are writes above the read.                         
-                        By Prop \ref{Wbel} and \ref{prop8}, $T_x$'s read has already been satisfied. By Prop \ref{prop7} and \ref{Wabv}, we can infer that $\reln{x'}{iwo}{w'}$ cannot exist. Hence, such an $x$ cannot exist. 
-                        
-                        Suppose they are writes below the read.
-                        The set of relations result in $po \cup rf$ cycle which violates coherence.  
-
-                        4.There must be an $x$ such that 
-                        \begin{align*}
-                            \reln{w_k^j}{smo}{x} \ \wedge \ \reln{w^j}{iwo}{x}
-                        \end{align*}
-
-                        There could have been an instance where $T_x$ and $T_k$ were swapped, to fix some other implied write order between writes. 
-                        Let us call those writes to be $x'$ and $w'_k$ respectively.
-                        Then by Def \ref{SymMemO}, we can infer 
-                        \begin{align*}
-                            \reln{w'_k}{smo}{x'} \wedge \reln{w'_k}{iwo}{x'}
-                        \end{align*}
-                        
-                        Suppose they are writes above the read.                         
-                        By Prop \ref{Wbel} and \ref{prop8}, $T_k$'s read has already been satisfied. By Prop \ref{prop7} and \ref{Wabv}, we can infer that $\reln{w'_k}{iwo}{x'}$ cannot exist. Hence, such an $x$ cannot exist. 
-                        
-                        Suppose they are writes below the read.
-                        The set of relations result in $po \cup rf$ cycle which violates coherence.  
-
-                        5.There must be an $x$ such that 
-                        \begin{align*}
-                            \reln{x}{smo}{w_k^j} \ \wedge \ \reln{w^j}{iwo}{x}
-                        \end{align*}
-
-                        There could have been an instance where $T_x$ and $T_k$ were swapped, to fix some other implied write order between writes. 
-                        Let us call those writes to be $x'$ and $w'_k$ respectively.
-                        Then by Def \ref{SymMemO}, we can infer 
-                        \begin{align*}
-                            \reln{x'}{smo}{w'_k} \wedge \reln{x'}{iwo}{w'_k}
-                        \end{align*}
-                        
-                        Suppose they are writes above the read.                         
-                        By Prop \ref{Wbel} and \ref{prop8}, $T_x$'s read has already been satisfied. By Prop \ref{prop7} and \ref{Wabv}, we can infer that $\reln{x'}{iwo}{w'_k}$ cannot exist. Hence, such an $x$ cannot exist. 
-                        
-                        Suppose they are writes below the read.
-                        The set of relations result in $po \cup rf$ cycle which violates coherence.
-                        %--------------------------------------------
-
-                    \item Part 2: There exists an implied write order between another write $w^j$ and $w_k^j$.
-                        
-                        By Prop \ref{prop8} and Prop \ref{Wabv}, implied write orders between $w^j$ and $w_k^j$ can only be of the form 
-                        \begin{align*}
-                            \reln{w_k^j}{iwo}{w^j}
-                        \end{align*}
-                        
-                        For the first form of relation, note that we also have by Prop \ref{prop1} and by Def \ref{SymMemO}, 
-                        \begin{align*}
-                            \reln{w_k^j}{smo}{w^j} \ \wedge \ \reln{w_i^j}{smo}{w^j}
-                        \end{align*}
-
-                        By Prop \ref{prop3} on swapping threads $T_i$ and $T_j$, we have 
-                        \begin{align*}
-                            \reln{w_i^l}{iwo}{w_k^l} \\ 
-                            \reln{w_i^j}{iwo}{w^j}
-                        \end{align*}
-                        Both these relations respect our irreflexivity constraint Prop \ref{prop1}, hence we can conclude this case. 
-
-                \end{itemize}
-
-            \paragraph{Case 2: $w^l$ is below the read.}
-
-                \begin{itemize}
-                    \item Part 1: There exists an implied write order between another write $w^j$ and $w_i^j$.
-                        By Prop \ref{prop8} and Prop \ref{Wbel}, implied write order between $w^j$ and $w_i^j$ can be of the form 
-                        \begin{align*}
-                            \reln{w_i^j}{iwo}{w^j}
-                        \end{align*}
-
-                        By Prop \ref{prop1}, on swapping, we have the following relations 
-                        \begin{align*}
-                            \reln{w_i^l}{iwo}{w_k^l} \\ 
-                            \reln{w_k^j}{iwo}{w^j}
-                        \end{align*}
-
-                        The latter relation may not respect our irreflexivity constraint. To show that this relation could not have been there before and thus can be fixed by Lemma 1, consider the original configuration
-                        \begin{align*}
-                            \reln{w_i^j}{iwo}{w^j} \ \wedge \ \reln{w_i^j}{smo}{w_k^j}
-                        \end{align*}
-
-                        For $\reln{w_k^j}{iwo}{w^j}$ to have been there before, we need an event $x$ to connect, having implied write orders with both. By Prop \ref{prop8}, $w^j$ can only have relations of the form  $\reln{w^j}{iwo}{w}$. Thus we have the possible two forms of relations that could exist:
-                        \begin{align*}
-                            \reln{w^j}{iwo}{x} \ \wedge \ \reln{x}{iwo}{w_k^j} \\ 
-                            \reln{w^j}{iwo}{x} \ \wedge \ \reln{w_k^j}{iwo}{x}
-                        \end{align*}
-
-                        The first set of relations violate coherence ($po \cup rf$ acyclic), while the second set of relations is not possible as due to Prop \ref{prop8}, such an event $x$ cannot exist. 
-
-                        Thus, the implied write order if exists after swapping, is new and could not have occured before and hence, by Lemma 1, we can fix it and will remain fixed. 
-
-                    \item Part 2: There exists an implied write order between another write $w^j$ and $w_k^j$.
-                    
-                        By Prop \ref{prop8}, implied write orders between $w^j$ and $w_k^j$ can be of the form
-                        \begin{align*}
-                            \reln{w_k^j}{iwo}{w^j} \\ 
-                            \reln{w^j}{iwo}{w_k^j}
-                        \end{align*} 
-
-                        Taking the first form, by Prop \ref{prop1} and Def \ref{SymMemO}, we have 
-                        \begin{align*}
-                            \reln{w_k^j}{smo}{w^j} \ \wedge \ \reln{w_i^j}{smo}{w^j}
-                        \end{align*}
-
-                        By Prop \ref{prop3}, on swapping, we have 
-                        \begin{align*}
-                            \reln{w_i^l}{iwo}{w_k^l} \\ 
-                            \reln{w_i^j}{iwo}{w^j}                         
-                        \end{align*}
-
-                        None of the above relations violate the irreflexivity constraint Prop \ref{prop1}. Hence, for this case, we are done. 
-
-                        For the second form, on swapping we have 
-                        \begin{align*}
-                            \reln{w_i^l}{iwo}{w_k^l} \\ 
-                            \reln{w^j}{iwo}{w_i^j}
-                        \end{align*}
-
-                        The latter relation may not respect our irreflexivity constraint. To show that this relation could not have been there before and thus can be fixed by Lemma 1, consider the original configuration
-                        \begin{align*}
-                            \reln{w_i^j}{smo}{w_k^j} \ \wedge \ \reln{w^j}{iwo}{w_k^j}
-                        \end{align*}
-
-                        For $\reln{w^j}{iwo}{w_i^j}$ to have been there before, we need an event $x$ to connect, having implied write orders with both. By Prop \ref{prop8}, $w_i^j$ can only have relations of the form  $\reln{w_i^j}{iwo}{w}$. Thus we have the possible two forms of relations that could exist:
-                        \begin{align*}
-                            \reln{w_i^j}{iwo}{x} \ \wedge \reln{x}{iwo}{w^j} \\ 
-                            \reln{w_i^j}{iwo}{x} \ \wedge \reln{w^j}{iwo}{x} \\ 
-                        \end{align*}
-
-                        The first set of relations violate coherence, ($po \cup rf$ acyclic). While the second one, by Prop \ref{prop8}, such an $x$ cannot exist. Hence, our relation is new and could not have occured before, and thus can be fixed by Lemma 1 and remain fixed.
-
-                \end{itemize}
-
-            
-        \end{proof}
-   
