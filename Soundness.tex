@@ -260,14 +260,14 @@
         \critic{red}{Perhaps put Incorrect implied write orders as a definition??}
         
         %Point 3
-        By Prop \ref{prop3}, we can swap thread identities to reverse implied write orders, thus "fixing" implied write orders, which then can make the resultant execution respect our rules. If we can show this process of "fixing" implied write orders is terminating, our soundness proof is complete. 
+        By Prop \ref{prop3}, we can swap thread identities to reverse implied write orders, thus "fixing" them, which then can make the resultant execution respect Prop \ref{prop1}. If we can show this process of "fixing" implied write orders is terminating, our soundness proof is complete. 
 
         %Point 4
-        We also fix the order in which we do such "fixing". We first address all implied write orders above the read and then go below. 
-        If any new implied write orders is introduced in the process, then we fix them as per the above order, i.e. if the new relation is above the read, we fix that next, contrast to any new order introduced below the read. 
+        We also maintain the order in which we do such "fixing". We first address all implied write orders above the read and then go below. 
+        If any new implied write orders is introduced in the process, we fix them as per the above order, i.e. if the new relation is above the read, we fix that first, contrast to any new impled write order introduced below the read. 
         
         %Point 
-        However, for each new implied write order introduced, we need to show that it wasn't "fixed" before, hence giving us guarantee that "fixing" is a terminating process. 
+        For each new implied write order introduced, if we show that it wasn't "fixed" before, it gives us guarantee that "fixing" is a terminating process. 
         
         %Point 5
         However, before all this, we first need to ensure that implied write orders do not form a cycle, as "fixing" them may not terminate.  By Prop \ref{prop6}, we have that $\stck{_{iwo}}$ is acyclic, hence they do not form a cycle.  
@@ -447,21 +447,32 @@
                         \begin{align*}
                             \reln{w_i^l}{iwo}{w_k^l} \ \wedge \ \reln{w_k^j}{iwo}{w^j}
                         \end{align*}
-                        The new relation $\reln{w_k^j}{iwo}{w^j}$ may be wrong. 
+                        The new relation $\reln{w_k^j}{iwo}{w^j}$ may not respect Prop \ref{prop1}. 
                         To show that this relation was not fixed before, we consider cases where it could have been fixed. We then show that such a configuration cannot exist. For this, we consdier another event $x$, and the following cases:
                         
-                        \begin{itemize}
+                        \begin{enumerate}
                             \item Case where $\reln{w^j}{iwo}{x} \ \wedge \ \reln{x}{iwo}{w_k^j}$
-                                %po union rf-1 cycle, violating coherence 
+                            
+                                The set of relations can exist in an execution graph, but results in $po \cup rf^{-1}$ cycle, thus violating coherence. 
+                            
                             \item Case where $\reln{x}{iwo}{w^j} \ \wedge \ \reln{x}{iwo}{w_k^j}$
-                                %By property 7, x is invalid
+                            
+                                By Prop \ref{prop7}, $x$ is an invalid event and thus such an execution graph cannot exist.
+                            
                             \item Case where $\reln{w^j}{smo}{x} \ \wedge \ \reln{x}{iwo}{w_k^j}$
-                                %There could exist events w' and x' above the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_k^j, which could have also been fixed. 
-                                %But such a configuration cannot exist, because po union rf-1 is a cycle here, which violates coherence
+                                
+                                There could exist events $w'$ and $x'$ above the read program ordered with $w^j$ and $x$ resp, with an implied write order. This could have been fixed before, in an execution graph an implied write order between $w^j$ and $w_k^j$, which could have also been "fixed". 
+                                By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{w'}{iwo}{x'}$. 
+                                Such a configuration cannot exist, as $po \cup rf_{-1}$ is a cycle here, thus violating coherence.
+                                
                             \item Case where $\reln{x}{iwo}{w^j} \ \wedge \ \reln{x}{iwo}{w_k^j}$
-                                %There could exist events w' and x' above the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_k^j, which could have also been fixed.
-                                %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{x'}{iwo}{w'}$. By Prop \ref{prop7} and Prop \ref{Wabv}, either $x'$ or $x$ is invalid, hence such a configuration cannot exist. 
-                        \end{itemize}
+                                
+                                There could exist events $w'$ and $x'$ above the read program ordered with $w^j$ and $x$ resp, with an implied write order. 
+                                This could have been fixed before, in an execution graph having an implied write order between $w^j$ and $w_k^j$, which could have also been fixed.
+                                By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{x'}{iwo}{w'}$. 
+                                By Prop \ref{prop7} and Prop \ref{Wabv}, either $x'$ or $x$ is invalid, hence such an execution graph cannot exist. 
+
+                        \end{enumerate}
 
 
                     \item There is an implied write order with $w_k^j$ and some $w^j$
@@ -475,27 +486,44 @@
                         \begin{align*}
                             \reln{w_i^l}{iwo}{w_k^l} \ \wedge \ \reln{w^j}{iwo}{w_i^j}
                         \end{align*}
-                        The new relation $\reln{w^j}{iwo}{w_i^j}$ may be wrong. 
+                        The new relation $\reln{w^j}{iwo}{w_i^j}$ may not respect Prop \ref{prop1}. 
                         To show that this relation was not fixed before, we consider cases where it could have been fixed. We then show that such a configuration cannot exist. For this, we consdier another event $x$, and the following cases:
-                        \begin{itemize}
+                        \begin{enumerate}
+                            
                             \item Case where $\reln{x}{iwo}{w^j} \ \wedge \ \reln{x}{iwo}{w_i^j}$
-                                %By Prop \ref{prop7}, $x$ is invalid.  
+                            
+                                By Prop \ref{prop7}, $x$ is invalid and thus such an execution graph cannot exist.  
+                            
                             \item Case where $\reln{x}{iwo}{w^j} \ \wedge \ \reln{w_i^j}{iwo}{x}$
-                                %pu union rf-1 is a cycle, thus violating coherence
+                        
+                                The set of relations can exist in an execution graph, but results in $po \cup rf^{-1}$ cycle, thus violating coherence. 
+                        
                             \item Case where $\reln{w^j}{smo}{x} \ \wedge \ \reln{x}{iwo}{w_i^j}$
-                                %There could exist events w' and x' above the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_k^j, which could have also been fixed.
-                                %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{w'}{iwo}{x'}$. By Prop \ref{prop7} and Prop \ref{Wabv}, either $w'$ or $w^j$ is invalid, hence such a configuration cannot exist.           
+                                
+                                There could exist events $w'$ and $x'$ above the read program ordered with $w^j$ and $x$ respectively, with an implied write order. 
+                                This could have been fixed before, in an execution graph having an implied write order between $w^j$ and $w_i^j$, which could have also been fixed.
+                                By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{w'}{iwo}{x'}$. 
+                                By Prop \ref{prop7} and Prop \ref{Wabv}, either $w'$ or $w^j$ is invalid, hence such a configuration cannot exist.           
+                            
                             \item Case where $\reln{x}{smo}{w^j} \ \wedge \ \reln{x}{iwo}{w_i^j}$
-                                %There could exist events w' and x' above the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_k^j, which could have also been fixed.
-                                %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{x'}{iwo}{w'}$. By Prop \ref{prop7} and Prop \ref{Wabv}, either $x'$ or $x$ is invalid, hence such a configuration cannot exist.
+                         
+                                There could exist events $w'$ and $x'$ above the read program ordered with $w^j$ and $x$ resp, with an implied write order. This could have been fixed before, in an execution graph having an implied write order between $w^j$ and $w_i^j$, which could have also been fixed.
+                                By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{x'}{iwo}{w'}$. 
+                                By Prop \ref{prop7} and Prop \ref{Wabv}, either $x'$ or $x$ is invalid, hence such a configuration cannot exist.
+                            
                             \item Case where $\reln{x}{smo}{w^j} \ \wedge \ \reln{w_i^j}{iwo}{x}$
-                                %There could exist events w' and x' above the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_k^j, which could have also been fixed.
-                                %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{x'}{iwo}{w'}$.
-                                %But such a configuration cannot exist, because po union rf-1 is a cycle here, which violates coherence
+                            
+                                There could exist events $w'$ and $x'$ above the read program ordered with $w^j$ and $x$ resp, with an implied write order. This could have been fixed before, in an execution graph having an implied write order between $w^j$ and $w_i^j$, which could have also been fixed.
+                                By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{x'}{iwo}{w'}$.
+                                Though such an exeuction graph cann exist, it has $po \cup rf^{-1}$ as a cycle, thus violating coherence
+                            
                             \item Case where $\reln{w^j}{smo}{x} \ \wedge \ \reln{w_i^j}{iwo}{x}$
-                                %There could exist events w' and x' above the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_k^j, which could have also been fixed.
-                                %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{w'}{iwo}{x'}$. By Prop \ref{prop7} and Prop \ref{Wabv}, either $w'$ or $w^j$ is invalid, hence such a configuration cannot exist.
-                        \end{itemize}
+                            
+                                There could exist events $w'$ and $x'$ above the read program ordered with $w^j$ and $x$ resp, with an implied write order. This could have been fixed before, in an execution graph having an implied write order between $w^j$ and $w_i^j$, which could have also been fixed.
+                                By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{w'}{iwo}{x'}$. 
+                                By Prop \ref{prop7} and Prop \ref{Wabv}, either $w'$ or $w^j$ is invalid, hence such a configuration cannot exist.
+
+                        \end{enumerate}
                 
                 \end{itemize}
 
@@ -550,21 +578,28 @@
                         \begin{align*}
                             \reln{w_i^l}{iwo}{w_k^l} \ \wedge \ \reln{w^j}{iwo}{w_i^j}
                         \end{align*}
-                        The new relation $\reln{w^j}{iwo}{w_i^j}$ may be wrong. 
+                        The new relation $\reln{w^j}{iwo}{w_i^j}$ may not respect Prop \ref{prop1}. 
                         To show that this relation was not fixed before, we consider cases where it could have been fixed. We then show that such a configuration cannot exist. For this, we consdier another event $x$, and the following cases:
 
-                        \begin{itemize}
+                        \begin{enumerate}
+                            
                             \item Case where $\reln{x}{iwo}{w^j} \ \wedge \ \reln{x}{iwo}{w_i^j}$
-                                %By Prop \ref{prop7}, $x$ is invalid. 
+                            
+                                By Prop \ref{prop7}, $x$ is invalid and thus such an execution cannot exist. 
+                            
                             \item Case where $\reln{w^j}{smo}{x} \ \wedge \ \reln{x}{iwo}{w_i^j}$
-                                %There could exist events w' and x' above the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_i^j, which could have also been fixed.
-                                %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{w'}{iwo}{x'}$.
-                                %By Prop \ref{prop7} and Prop \ref{Wabv}, either $w'$ or $w^j$ is invalid. 
+                        
+                                There could exist events $w'$ and $x'$ above the read program ordered with $w^j$ and $x$ resp, with an implied write order. This could have been fixed before, in an execution graph having an implied write order between $w^j$ and $w_i^j$, which could have also been fixed.
+                                By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{w'}{iwo}{x'}$.
+                                By Prop \ref{prop7} and Prop \ref{Wabv}, either $w'$ or $w^j$ is invalid and thus such an execution graph cannot exist. 
+                            
                             \item Case where $\reln{x}{smo}{w^j} \ \wedge \ \reln{x}{iwo}{w_i^j}$
-                                %There could exist events w' and x' above the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_i^j, which could have also been fixed.
-                                %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{x'}{iwo}{w'}$.
-                                %By Prop \ref{prop7} and Prop \ref{Wabv}, either $x'$ or $x$ is invalid. 
-                        \end{itemize}
+                                
+                                There could exist events $w'$ and $x'$ above the read program ordered with $w^j$ and $x$ resp, with an implied write order. This could have been fixed before, in an execution graph having an implied write order between $w^j$ and $w_i^j$, which could have also been fixed.
+                                By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{x'}{iwo}{w'}$.
+                                By Prop \ref{prop7} and Prop \ref{Wabv}, either $x'$ or $x$ is invalid and thus such an execution graph cannot exist. 
+                        
+                        \end{enumerate}
 
                 \end{itemize}
 
@@ -588,56 +623,81 @@
                         \begin{align*}
                             \reln{w_i^l}{iwo}{w_k^l} \ \wedge \ \reln{w_k^j}{iwo}{w^j}
                         \end{align*}
-                        The new relation $\reln{w_k^j}{iwo}{w^j}$ may be wrong. 
+                        The new relation $\reln{w_k^j}{iwo}{w^j}$ may not respect Prop \ref{prop1}. 
                         To show that this relation was not fixed before, we consider cases where it could have been fixed. We then show that such a configuration cannot exist. For this, we consdier another event $x$, and the following cases:
 
-                        \begin{itemize}
+                        \begin{enumerate}
                             \item Case where $\reln{w^j}{iwo}{x} \ \wedge \ \reln{x}{iwo}{w_k^j}$
-                                %po union rf cycle, thus violating coherence.
+                        
+                                Though such an execution graph can exist, it has $po \cup rf$ cycle, thus violating coherence.
+                            
                             \item Case where $\reln{w^j}{iwo}{x} \ \wedge \ \reln{w_k^j}{iwo}{x}$
-                                %By Prop \ref{prop8}, $x$ is invalid. 
+                        
+                                By Prop \ref{prop8}, $x$ is invalid. 
+                            
                             \item Case where $\reln{w^j}{smo}{x} \ \wedge \ \reln{x}{iwo}{w_k^j}$
-                                %There could exist events w' and x' above the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_i^j, which could have also been fixed.
-                                %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{w'}{iwo}{x'}$.
-                                %By Prop \ref{Wbel} and Prop \ref{prop7}, either $w'$ or $w^j$ are invalid. 
+                                
+                                \begin{itemize}
+                                    
+                                    \item There could exist events $w'$ and $x'$ above the read program ordered with $w^j$ and $x$ resp, with an implied write order. This could have been fixed before, in an execution graph having an implied write order between $w^j$ and $w_k^j$, which could have also been fixed.
+                                    By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{w'}{iwo}{x'}$.
+                                    By Prop \ref{Wbel} and Prop \ref{prop7}, either $w'$ or $w^j$ are invalid and thus such an execution graph cannot exist. 
 
-                                %There could exist events w' and x' below the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_i^j, which could have also been fixed.
-                                %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{w'}{iwo}{x'}$.
-                                %In this case, we have po union rf as a cycle, thus violating coherence. 
+                                    \item There could exist events $w'$ and $x'$ below the read program ordered with $w^j$ and $x$ resp, with an implied write order. This could have been fixed before, in an execution graph having an implied write order between $w^j$ and $w_k^j$, which could have also been fixed.
+                                    By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{w'}{iwo}{x'}$.
+                                    Though such an execution graph can exist, it has $po \cup rf$ as a cycle, thus violating coherence. 
+
+                                \end{itemize}
 
                             \item Case where $\reln{x}{smo}{w^j} \ \wedge \ \reln{x}{iwo}{w_k^j}$
-                                %There could exist events w' and x' above the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_i^j, which could have also been fixed.
-                                %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{x'}{iwo}{w'}$.
-                                
-                                %The only way to get a configuration with $\reln{w_k^j}{iwo}{w^j}$ before would be to swap $T_x$ and $T'$ first, followed by swapping $T'$ and $T_k$. 
-                                %But this swapping order is not possible, as the "fixing" process we have is to fix implied write orders above read first and then below. In that sense, the de-swapping here can only be implied write orders below read and then above read. 
-                                %Since this is not possible in the above configuration, we can conclude that $\reln{w_k^j}{iwo}{w^j}$ did not exist before and hence could not have been fixed.
-                                
-                                \critic{blue}{The reader should note that though it was possible for the correct relation $\reln{w^j}{iwo}{w_k^j}$ to exist, it wasn't something that was "fixed" by swapping. This is different from those implied write orders which were fixed by swapping thread identities. (Discuss with Viktor on this)}
+                               
+                                \begin{itemize}
 
-                                %There could exist events w' and x' below the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_i^j, which could have also been fixed.
-                                %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{x'}{iwo}{w'}$.
-                                %By Prop \ref{Wbel} and Prop \ref{prop8}, either $w'$ or $w^j$ are invalid. 
+                                    \item There could exist events $w'$ and $x'$ above the read program ordered with $w^j$ and $x$ resp, with an implied write order. This could have been fixed before, in an execution graph having an implied write order between $w^j$ and $w_k^j$, which could have also been fixed.
+                                    By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{x'}{iwo}{w'}$.
+                                
+                                    The only way to get a configuration with $\reln{w_k^j}{iwo}{w^j}$ before would be to swap $T_x$ and $T'$ first, followed by swapping $T'$ and $T_k$. 
+                                    But this swapping order is not possible, as the "fixing" order we have is to address implied write orders above read first and then below. 
+                                    The "de-swapping" here can only be implied write orders below read and then those above. 
+                                    Since this is not possible in the above configuration, we can conclude that $\reln{w_k^j}{iwo}{w^j}$ did not exist before and hence could not have been fixed.
+                                
+                                    \critic{blue}{The reader should note that though it was possible for the correct relation $\reln{w^j}{iwo}{w_k^j}$ to exist, it wasn't something that was "fixed" by swapping. This is different from those implied write orders which were fixed by swapping thread identities. (Discuss with Viktor on this)}
+                                
+                                    \item There could exist events $w'$ and $x'$ below the read program ordered with $w^j$ and $x$ resp, with an implied write order. This could have been fixed before, in an execution graph having an implied write order between $w^j$ and $w_k^j$, which could have also been fixed.
+                                    By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{x'}{iwo}{w'}$.
+                                    By Prop \ref{Wbel} and Prop \ref{prop8}, either $w'$ or $w^j$ are invalid and thus such an execution graph cannot exist.
+                                    
+                                \end{itemize}
 
                             \item Case where $\reln{w^j}{smo}{x} \ \wedge \ \reln{w_k^j}{iwo}{x}$
-                                %There could exist events w' and x' above the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_i^j, which could have also been fixed.
-                                %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{w'}{iwo}{x'}$.
-                                %By Prop \ref{Wbel} and Prop \ref{prop7}, either $w'$ or $w^j$ are invalid. 
+                                
+                                \begin{itemize}
+                                
+                                    \item There could exist events $w'$ and $x'$ above the read program ordered with $w^j$ and $x$ resp, with an implied write order. This could have been fixed before, in an execution graph having an implied write order between $w^j$ and $w_k^j$, which could have also been fixed.
+                                    By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{w'}{iwo}{x'}$.
+                                    By Prop \ref{Wbel} and Prop \ref{prop7}, either $w'$ or $w^j$ are invalid. 
 
-                                %There could exist events w' and x' below the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_i^j, which could have also been fixed.
-                                %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{w'}{iwo}{x'}$.
-                                %By Prop \ref{prop8} nad Prop \ref{Wbel}, either $x'$ or $x$ are invalid. 
+                                    \item There could exist events $w'$ and $x'$ below the read program ordered with $w^j$ and $x$ resp, with an implied write order. This could have been fixed before, in an execution graph having an implied write order between $w^j$ and $w_k^j$, which could have also been fixed.
+                                    By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{w'}{iwo}{x'}$.
+                                    By Prop \ref{prop8} nad Prop \ref{Wbel}, either $x'$ or $x$ are invalid and thus such an execution graph cannot exist. 
+                                    
+                                \end{itemize}
 
                             \item Case where $\reln{x}{smo}{w^j} \ \wedge \ \reln{w_k^j}{iwo}{x}$
-                                %There could exist events w' and x' above the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_i^j, which could have also been fixed.
-                                %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{x'}{iwo}{w'}$.
-                                %By Prop \ref{Wbel} and Prop \ref{prop7}, either $x'$ or $x$ are invalid. 
+                                
+                                \begin{itemize}
+                                
+                                    \item There could exist events $w'$ and $x'$ above the read program ordered with $w^j$ and $x$ resp, with an implied write order. This could have been fixed before, in an execution graph having an implied write order between $w^j$ and $w_k^j$, which could have also been fixed.
+                                    By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{x'}{iwo}{w'}$.
+                                    By Prop \ref{Wbel} and Prop \ref{prop7}, either $x'$ or $x$ are invalid and thus such an execution graph cannot exist.  
 
-                                %There could exist events w' and x' below the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_i^j, which could have also been fixed.
-                                %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{x'}{iwo}{w'}$.
-                                %By Prop \ref{Wbel} and Prop \ref{prop8}, either $w'$ or $w^j$ are invalid. 
+                                    \item There could exist events $w'$ and $x'$ below the read program ordered with $w^j$ and $x$ resp, with an implied write order. This could have been fixed before, in an execution graph having an implied write order between $w^j$ and $w_k^j$, which could have also been fixed.
+                                    By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{x'}{iwo}{w'}$.
+                                    By Prop \ref{Wbel} and Prop \ref{prop8}, either $w'$ or $w^j$ are invalid and thus such an execution graph cannot exist. 
+                                    
+                                \end{itemize}
 
-                        \end{itemize}
+                        \end{enumerate}
                         
                     \item There is an implied write order with $w_k^j$ and some $w^j$
                     
@@ -663,38 +723,53 @@
                         \begin{align*}
                             \reln{w_i^l}{iwo}{w_k^l} \ \wedge \ \reln{w^j}{iwo}{w_i^j}
                         \end{align*}
-                        The new relation $\reln{w^j}{iwo}{w_i^j}$ may be wrong. 
+                        The new relation $\reln{w^j}{iwo}{w_i^j}$ may not respect Prop \ref{prop1}. 
                         To show that this relation was not fixed before, we consider cases where it could have been fixed. We then show that such a configuration cannot exist. For this, we consdier another event $x$, and the following cases:
 
-                        \begin{itemize}
+                        \begin{enumerate}
                             \item Case where $\reln{x}{iwo}{w^j} \ \wedge \ \reln{w_i^j}{iwo}{x}$
-                                % po union rf cycle, thus violating coherence
+                        
+                                Though such an execution graph can exist, it has  $po \cup rf$ as a cycle, thus violating coherence.
+                            
                             \item Case where $\reln{w^j}{iwo}{x} \ \wedge \ \reln{w_i^j}{iwo}{x}$
-                                % By Prop \ref{prop8}, $x$ is invalid. 
+                            
+                                By Prop \ref{prop8}, $x$ is invalid and thus such an execution graph cannot exist. 
+                            
                             \item Case where $\reln{x}{smo}{w^j} \ \wedge \ \reln{w_i^j}{iwo}{x}$
-                                %There could exist events w' and x' above the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_i^j, which could have also been fixed.
-                                %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{x'}{iwo}{w'}$.
-                                %By Prop \ref{Wbel} and Prop \ref{prop7}, either $x'$ or $x$ are invalid.
                                 
-                                %There could exist events w' and x' below the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_i^j, which could have also been fixed.
-                                %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{x'}{iwo}{w'}$.
-                                %We have po union rf cycle, thus violating coherence. 
+                                \begin{itemize}
                                 
+                                    \item There could exist events $w'$ and $x'$ above the read program ordered with $w^j$ and $x$ resp, with an implied write order. This could have been fixed before, in an execution graph having an implied write order between $w^j$ and $w_i^j$, which could have also been fixed.
+                                    By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{x'}{iwo}{w'}$.
+                                    By Prop \ref{Wbel} and Prop \ref{prop7}, either $x'$ or $x$ are invalid.
+                                
+                                    \item There could exist events $w'$ and $x'$ below the read program ordered with $w^j$ and $x$ resp, with an implied write order. This could have been fixed before, in an execution graph having an implied write order between $w^j$ and $w_i^j$, which could have also been fixed.
+                                    By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{x'}{iwo}{w'}$.
+                                    Such an execution graph has $po \cup rf$ cycle, thus violating coherence. 
+                                
+                                \end{itemize}
+                            
                             \item Case where $\reln{w^j}{smo}{x} \ \wedge \ \reln{w_i^j}{iwo}{x}$
-                                %There could exist events w' and x' above the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_i^j, which could have also been fixed.
-                                %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{w'}{iwo}{x'}$.
+                        
+                                \begin{itemize}
+                                
+                                    \item There could exist events $w'$ and $x'$ above the read program ordered with $w^j$ and $x$ resp, with an implied write order. This could have been fixed before, in an execution graph having an implied write order between $w^j$ and $w_i^j$, which could have also been fixed.
+                                    By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{w'}{iwo}{x'}$.
 
-                                %The only way to get a configuration with $\reln{w^j}{iwo}{w_i^j}$ before would be to swap $T_x$ and $T'$ first, followed by swapping $T'$ and $T_i$. 
-                                %But this swapping order is not possible, as the "fixing" process we have is to fix implied write orders above read first and then below. The de-swapping here can only be implied write orders below read and then above read. 
-                                %Since this is not possible in the above configuration, we can conclude that $\reln{w^j}{iwo}{w_i^j}$ did not exist before and hence could not have been fixed.
-                                %TO BE DONE LATER
-                                \critic{blue}{The reader should note that though it was possible for the correct relation $\reln{w^j}{iwo}{w_k^j}$ to exist, it wasn't something that was "fixed" by swapping. This is different from those implied write orders which were fixed by swapping thread identities. (Discuss with Viktor on this)}
+                                    The only way to get a configuration with $\reln{w^j}{iwo}{w_i^j}$ before would be to swap $T_x$ and $T'$ first, followed by swapping $T'$ and $T_i$. 
+                                    But this swapping order is not possible, as the "fixing" process we have is to fix implied write orders above read first and then below. 
+                                    The de-swapping here can only be implied write orders below read and then above read. 
+                                    Since this is not possible in the above configuration, we can conclude that $\reln{w^j}{iwo}{w_i^j}$ did not exist before and hence could not have been fixed.
+                                
+                                    \critic{blue}{The reader should note that though it was possible for the correct relation $\reln{w^j}{iwo}{w_k^j}$ to exist, it wasn't something that was "fixed" by swapping. This is different from those implied write orders which were fixed by swapping thread identities. (Discuss with Viktor on this)}
 
-                                %There could exist events w' and x' below the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_i^j, which could have also been fixed.
-                                %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{w'}{iwo}{x'}$.
-                                %By Prop \ref{Wbel} and Prop \ref{prop8}, either $x'$ or $x$ are invalid. 
+                                    \item There could exist events $w'$ and $x'$ below the read program ordered with $w^j$ and $x$ resp, with an implied write order. This could have been fixed before, in an execution graph having an implied write order between $w^j$ and $w_i^j$, which could have also been fixed.
+                                    By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{w'}{iwo}{x'}$.
+                                    By Prop \ref{Wbel} and Prop \ref{prop8}, either $x'$ or $x$ are invalid. 
 
-                        \end{itemize}
+                                \end{itemize}
+
+                        \end{enumerate}
 
                 \end{itemize}
             
@@ -732,33 +807,43 @@
                             \reln{w_i^l}{iwo}{w_k^l} \ \wedge \ \reln{w_k^j}{iwo}{w^j}
                         \end{align*}
 
-                        The new relation $\reln{w_k^j}{iwo}{w^j}$ may be wrong. 
+                        The new relation $\reln{w_k^j}{iwo}{w^j}$ may not respect Prop \ref{prop1}. 
                         To show that this relation was not fixed before, we consider cases where it could have been fixed. We then show that such a configuration cannot exist. For this, we consdier another event $x$, and the following cases:
 
-                        \begin{itemize}
+                        \begin{enumerate}
                             \item Case where $\reln{w^j}{iwo}{x} \ \wedge \ \reln{w_k^j}{iwo}{x}$
-                                %By Prop \ref{prop8}, $x$ is invalid.
-
+                                
+                                By Prop \ref{prop8}, $x$ is invalid and thus such an execution graph cannot exist.
 
                             \item Case where $\reln{w^j}{smo}{x} \ \wedge \ \reln{w_k^j}{iwo}{x}$
-                                %There could exist events w' and x' above the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_i^j, which could have also been fixed.
-                                %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{w'}{iwo}{x'}$.
-                                %By Prop \ref{Wbel}, Prop \ref{Wabv} and Prop \ref{prop7}, either $w'$ or $w^j$ are invalid. 
 
-                                %There could exist events w' and x' below the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_i^j, which could have also been fixed.
-                                %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{w'}{iwo}{x'}$.
-                                %By Prop \ref{Wbel} and Prop \ref{prop7}, either $x'$ or $x$ are invalid. 
+                                \begin{itemize}
+                                
+                                    \item There could exist events $w'$ and $x'$ above the read program ordered with $w^j$ and $x$ resp, with an implied write order. This could have been fixed before, in an execution graph having an implied write order between $w^j$ and $w_k^j$, which could have also been fixed.
+                                    By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{w'}{iwo}{x'}$.
+                                    By Prop \ref{Wbel}, Prop \ref{Wabv} and Prop \ref{prop7}, either $w'$ or $w^j$ are invalid. 
+
+                                    \item There could exist events $w'$ and $x'$ below the read program ordered with $w^j$ and $x$ resp, with an implied write order. This could have been fixed before, in an execution graph having an implied write order between $w^j$ and $w_k^j$, which could have also been fixed.
+                                    By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{w'}{iwo}{x'}$.
+                                    By Prop \ref{Wbel} and Prop \ref{prop7}, either $x'$ or $x$ are invalid. 
+
+                                \end{itemize}
 
                             \item Case where $\reln{x}{smo}{w^j} \ \wedge \ \reln{w_k^j}{iwo}{x}$
-                                %There could exist events w' and x' above the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_i^j, which could have also been fixed.
-                                %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{x'}{iwo}{w'}$.
-                                %By Prop \ref{Wbel}, Prop \ref{Wabv} and Prop \ref{prop7}, either $x'$ or $x$ are invalid.
+                                
+                                \begin{itemize}
+                                
+                                    \item There could exist events $w'$ and $x'$ above the read program ordered with $w^j$ and $x$ resp, with an implied write order. This could have been fixed before, in an execution graph having an implied write order between $w^j$ and $w_k^j$, which could have also been fixed.
+                                    By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{x'}{iwo}{w'}$.
+                                    By Prop \ref{Wbel}, Prop \ref{Wabv} and Prop \ref{prop7}, either $x'$ or $x$ are invalid.
 
-                                %There could exist events w' and x' below the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_i^j, which could have also been fixed.
-                                %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{x'}{iwo}{w'}$.
-                                %By Prop \ref{Wbel} and Prop \ref{prop7}, either $w'$ or $w^j$ are invalid. 
+                                    \item There could exist events $w'$ and $x'$ below the read program ordered with $w^j$ and $x$ resp, with an implied write order. This could have been fixed before, in an execution graph having an implied write order between $w^j$ and $w_k^j$, which could have also been fixed.
+                                    By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{x'}{iwo}{w'}$.
+                                    By Prop \ref{Wbel} and Prop \ref{prop7}, either $w'$ or $w^j$ are invalid.
+                                    
+                                \end{itemize}
                             
-                        \end{itemize}
+                        \end{enumerate}
                         
                     \item There is an implied write order with $w_k^j$ and some $w^j$
                         By Prop \ref{prop8} and Prop \ref{Wabv}, implied write orders between the two events can be of the form 
@@ -813,31 +898,29 @@
                             \reln{w_i^l}{iwo}{w_k^l} \ \wedge \ \reln{w_k^j}{iwo}{w^j}
                         \end{align*}
 
-                        The new relation $\reln{w_k^j}{iwo}{w^j}$ may be wrong. 
+                        The new relation $\reln{w_k^j}{iwo}{w^j}$ may not respect Prop \ref{prop1}. 
                         To show that this relation was not fixed before, we consider cases where it could have been fixed. We then show that such a configuration cannot exist. Since most of these cases have already been covered, we will only address those cases which aren't; i.e. those where certain implied write orders between writes below the read have been "fixed". For this, we consdier another event $x$, and the following cases:
 
-                        \begin{itemize}
+                        \begin{enumerate}
                             \item Case where $\reln{w^j}{smo}{x} \ \wedge \ \reln{x}{iwo}{w_k^j}$
-                                %There could exist events w' and x' below the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_i^j, which could have also been fixed.
-                                %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{w'}{iwo}{x'}$
+                                
+                                There could exist events $w'$ and $x'$ below the read program ordered with $w^j$ and $x$ resp, with an implied write order. This could have been fixed before, in an execution graph having an implied write order between $w^j$ and $w_k^j$, which could have also been fixed.
+                                By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{w'}{iwo}{x'}$
 
-                                %The only way to get a configuration with $\reln{w_k^j}{iwo}{w^j}$ before would be to swap $T_x$ and $T'$ first, followed by swapping $T'$ and $T_i$. 
-                                %On swapping $T_x$ and $T'$, we have the following configuration 
+                                The only way to get a configuration with $\reln{w_k^j}{iwo}{w^j}$ before would be to swap $T_x$ and $T'$ first, followed by swapping $T'$ and $T_i$. 
+                                On swapping $T_x$ and $T'$, we have the following configuration 
                                 \begin{align*}
                                     \reln{x'}{iwo}{w'} \ \wedge \ \reln{w_k^l}{iwo}{w_i^l} \ \wedge \ \reln{w^j}{iwo}{w_k^j} \ \wedge \ \reln{x}{iwo}{w_i^j} 
                                 \end{align*}
-                                %If this was the original configuration of execution, we can note that $\reln{w_k^l}{iwo}{w_i^l}$ would be fixed first as it is between writes above the read, in contrast to $\reln{x'}{iwo}{w'}$. Hence, it is not possible to have gotten our intended execution graph from this configuration. Thus, we can conclude that $\reln{w_k^j}{iwo}{w^j}$ could not have been fixed before.  
-
-                                %Since this is not possible in the above configuration, we can conclude that $\reln{w^j}{iwo}{w_i^j}$ did not exist before and hence could not have been fixed.
-                                %TO BE ADDRESSED SEPARATELY
-
+                                If this was the original configuration of execution, we can note that $\reln{w_k^l}{iwo}{w_i^l}$ would be fixed first as it is between writes above the read, in contrast to $\reln{x'}{iwo}{w'}$. Hence, it is not possible to have gotten our intended execution graph from this configuration. Thus, we can conclude that $\reln{w_k^j}{iwo}{w^j}$ could not have been fixed before.  
+                             
                             \item Case where $\reln{x}{smo}{w^j} \ \wedge \ \reln{x}{iwo}{w_k^j}$
-                                %There could exist events w' and x' below the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_i^j, which could have also been fixed.
-                                %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{x'}{iwo}{w'}$
-                                %By Prop \ref{prop8} and Prop \ref{Wbel}, either $w'$ or $w^j$ is invalid.
-                        \end{itemize}
-
-
+                                
+                                There could exist events $w'$ and $x'$ below the read program ordered with $w^j$ and $x$ resp, with an implied write order. This could have been fixed before, in an execution graph having an implied write order between $w^j$ and $w_k^j$, which could have also been fixed.
+                                By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{x'}{iwo}{w'}$
+                                By Prop \ref{prop8} and Prop \ref{Wbel}, either $w'$ or $w^j$ is invalid.
+                        
+                        \end{enumerate}
 
                     \item There is an implied write order with $w_k^j$ and some $w^j$
 
@@ -851,38 +934,41 @@
                             \reln{w_i^l}{iwo}{w_k^l} \ \wedge \ \reln{w^j}{iwo}{w_i^j}
                         \end{align*}
 
-                        The new relation $\reln{w^j}{iwo}{w_i^j}$ may be wrong. 
+                        The new relation $\reln{w^j}{iwo}{w_i^j}$ may not respect Prop \ref{prop1}. 
                         To show that this relation was not fixed before, we consider cases where it could have been fixed. We then show that such a configuration cannot exist. Since most of these cases have already been covered, we will only address those cases which aren't; i.e. those where certain implied write orders between writes below the read have been "fixed". For this, we consdier another event $x$, and the following cases:
 
-                        \begin{itemize}
+                        \begin{enumerate}
                             \item Case where $\reln{w^j}{smo}{x} \ \wedge \ \reln{w_i^j}{iwo}{x}$
-                                %There could exist events w' and x' below the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_i^j, which could have also been fixed.
-                                %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{w'}{iwo}{x'}$
                                 
-                                %TO BE ADDRESSED SEPARATELY
-                                %The only way to get a configuration with $\reln{w^j}{iwo}{w_i^j}$ before would be to swap $T_x$ and $T'$ first, followed by swapping $T'$ and $T_i$. 
-                                %On swapping $T_x$ and $T'$, we have the following configuration 
+                                There could exist events $w'$ and $x'$ below the read program ordered with $w^j$ and $x$ resp, with an implied write order. This could have been fixed before, in an execution graph having an implied write order between $w^j$ and $w_i^j$, which could have also been fixed.
+                                By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{w'}{iwo}{x'}$
+                                
+                                The only way to get a configuration with $\reln{w^j}{iwo}{w_i^j}$ before would be to swap $T_x$ and $T'$ first, followed by swapping $T'$ and $T_i$. 
+                                On swapping $T_x$ and $T'$, we have the following configuration 
                                 \begin{align*}
                                     \reln{x'}{iwo}{w'} \ \wedge \ \reln{w_k^l}{iwo}{w_i^l} \ \wedge \ \reln{w_i^j}{iwo}{w^j} \ \wedge \ \reln{x}{iwo}{w_i^j} 
                                 \end{align*}
-                                %If this was the original configuration of execution, we can note that $\reln{w_k^l}{iwo}{w_i^l}$ would be fixed first as it is between writes above the read, in contrast to $\reln{x'}{iwo}{w'}$ which is between writes below the read. Hence, it is not possible to have gotten our intended execution graph from this configuration. Thus, we can conclude that $\reln{w^j}{iwo}{w_i^j}$ could not have been fixed before.
+                                If this was the original configuration of execution, we can note that $\reln{w_k^l}{iwo}{w_i^l}$ would be fixed first as it is between writes above the read, in contrast to $\reln{x'}{iwo}{w'}$ which is between writes below the read. Hence, it is not possible to have gotten our intended execution graph from this configuration. Thus, we can conclude that $\reln{w^j}{iwo}{w_i^j}$ could not have been fixed before.
 
                             \item Case where $\reln{x}{smo}{w^j} \ \wedge \ \reln{w_i^j}{iwo}{x}$
-                                %There could exist events w' and x' below the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_i^j, which could have also been fixed.
-                                %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{x'}{iwo}{w'}$
-                                %By Prop \ref{prop8} and Prop \ref{Wbel}, either $w'$ or $w^j$ is invalid.
+                                
+                                There could exist events $w'$ and $x'$ below the read program ordered with $w^j$ and $x$ resp, with an implied write order. This could have been fixed before, in an execution graph having an implied write order between $w^j$ and $w_i^j$, which could have also been fixed.
+                                By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{x'}{iwo}{w'}$
+                                By Prop \ref{prop8} and Prop \ref{Wbel}, either $w'$ or $w^j$ is invalid.
 
                             \item Case where $\reln{w^j}{smo}{x} \ \wedge \ \reln{x}{iwo}{w_i^j}$
-                                %There could exist events w' and x' below the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_i^j, which could have also been fixed.
-                                %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{w'}{iwo}{x'}$
-                                %By Prop \ref{prop8} and Prop \ref{Wbel}, either $x'$ or $x$ is invalid.
+                                
+                                There could exist events $w'$ and $x'$ below the read program ordered with $w^j$ and $x$ resp, with an implied write order. This could have been fixed before, in an execution graph having an implied write order between $w^j$ and $w_i^j$, which could have also been fixed.
+                                By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{w'}{iwo}{x'}$
+                                By Prop \ref{prop8} and Prop \ref{Wbel}, either $x'$ or $x$ is invalid.
 
                             \item Case where $\reln{x}{smo}{w^j} \ \wedge \ \reln{x}{iwo}{w_i^j}$
-                                %There could exist events w' and x' below the read program ordered with w^j and x resp, with an implied write order. This could have been fixed before, thus giving us a relation with w^j and w_i^j, which could have also been fixed.
-                                %By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{x'}{iwo}{w'}$
-                                %By Prop \ref{prop8} and Prop \ref{Wbel}, either $w'$ or $w^j$ is invalid.
+                                
+                                There could exist events $w'$ and $x'$ below the read program ordered with $w^j$ and $x$ resp, with an implied write order. This could have been fixed before, in an execution graph having an implied write order between $w^j$ and $w_i^j$, which could have also been fixed.
+                                By Def \ref{SymMemO} and Prop \ref{prop1}, we have $\reln{x'}{iwo}{w'}$
+                                By Prop \ref{prop8} and Prop \ref{Wbel}, either $w'$ or $w^j$ is invalid.
 
-                        \end{itemize}
+                        \end{enumerate}
                 \end{itemize}
 
                 In summary, we can conclude that new implied write orders among other set of writes introduced while fixing an implied write order, if wrong cannot have been resolved earlier, and thus, by Lemma \ref{lemma1} can be fixed and will remain fixed.
