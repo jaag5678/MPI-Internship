@@ -416,7 +416,7 @@
             Since we fixed the order in which we "fix" these orders, we have to only consider the following cases:
             \paragraph{1. Write orders above read fixed , write orders above still need fixing.}
 
-                Let us assume that the fixed set \textbf{above the read is the set of writes $w^j$}. Let us consider two threads $T_i$ and $T_k$ whose writes \textbf{above the read $w_i^l$ and $w_k^l$} is going to be fixed. Without loss of generality, let us conisder the symmetric memory order between these two threads to be of the form $\reln{w_i}{smo}{w_k}$.  By Prop \ref{prop5}, we then have the configuration as:
+                Let us assume that the fixed set \textbf{above the read is the set of writes $w^j$}. Let us consider two threads $T_i$ and $T_k$ whose writes \textbf{above the read $w_i^l$ and $w_k^l$} is going to be fixed. Without loss of generality, let us consider the symmetric memory order between these two threads to be of the form $\reln{w_i}{smo}{w_k}$.  By Prop \ref{prop5}, we then have the configuration as:
                 \begin{align*}
                     \reln{w_i^j}{smo}{w_k^j} \ \wedge \ \reln{w_k^l}{iwo}{w_i^l}
                 \end{align*}

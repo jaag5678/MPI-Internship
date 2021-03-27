@@ -1,4 +1,4 @@
-\subsection{Implied Read Orders - A road to optimality}
+\subsection{Implied Read Orders - A road to optimality?}
 
     %State examples showing that implied write orders though sorted can still have us explore more executions.
 
@@ -12,151 +12,174 @@
         It is important to note that we consider resolving implied read orders only when all the implied write orders are resolved.
         Our definition of implied read orders is only to capture those patterns in executions where Prop \ref{prop1} is satisfied.
         
-    %total order between reads of symmetric threads.
-    \begin{definition}
-        \label{SymReadOrd}
-        xyz
-    \end{definition}
+        %total order between reads of symmetric threads.
+        \begin{definition}
+            \label{SymReadOrd}
+            xyz
+        \end{definition}
 
-    \begin{definition}{Implied Read Order}
-        \label{ImpReadOrd}
-        Here's the definition of implied read order. 
-        Note that the order is a sequential composition which is a binary relation between two writes, but whose reads are ordered.
-        Since we consider only one read per thread, we do not need to specify precisely the reads involved in composing this relation.
-        If we do want to specify, it would be $rf^{-1};smo;rf$, which would have three variants if defined with respect to implied write orders. 
-        We could define a property, saying which implied write orders can be inferred using a given implied read order. 
-        This can help us identify the exact set of relations (iwo for our purpose) that are subject to change. 
-        Additionally, we can also show which possible read orders are subject to change.
-    \end{definition}
+        \begin{definition}{Implied Read Order}
+            \label{ImpReadOrd}
+            Here's the definition of implied read order. 
+            Note that the order is a sequential composition which is a binary relation between two writes, but whose reads are ordered.
+            Since we consider only one read per thread, we do not need to specify precisely the reads involved in composing this relation.
+            If we do want to specify, it would be $rf^{-1};smo;rf$, which would have three variants if defined with respect to implied write orders. 
+            We could define a property, saying which implied write orders can be inferred using a given implied read order. 
+            This can help us identify the exact set of relations (iwo for our purpose) that are subject to change. 
+            Additionally, we can also show which possible read orders are subject to change.
+        \end{definition}
 
-    %the three forms of implied read order using implied write order and symmetric memory order.
-    \begin{property}
-        \label{inf-iwo}
-        If an implied read order is derived using writes above the read, then xyz.
-        If an implied read order is derived using writes below the read, then xyz.
-    \end{property}
+        %the three forms of implied read order using implied write order and symmetric memory order.
+        \begin{property}
+            \label{inf-iwo}
+            If an implied read order is derived using writes above the read, then xyz.
+            If an implied read order is derived using writes below the read, then xyz.
+        \end{property}
 
-    \begin{proof}
-        Xyz
-    \end{proof}
+        \begin{proof}
+            Xyz
+        \end{proof}
 
-    %every incorrect iro between two threads has no implied write orders between them 
-    \begin{property}
-        \label{iro-no-iwo}
-        If two threads have an "incorrect(one that does not respect our irreflexivity constraint)" implied read order between them, they do not have any implied write order between them. 
-        Because we are only concerned about swapping threads with incorrect implied read orders, we only consider them for any reversal of fixed implied write order.     
-    \end{property}
+        %every incorrect iro between two threads has no implied write orders between them 
+        \begin{property}
+            \label{iro-no-iwo}
+            If two threads have an "incorrect(one that does not respect our irreflexivity constraint)" implied read order between them, they do not     have any implied write order between them. 
+            Because we are only concerned about swapping threads with incorrect implied read orders, we only consider them for any reversal of fixed    implied write order.     
+        \end{property}
 
-    \begin{proof}
-        Xyz
-    \end{proof}
+        \begin{proof}
+            Xyz
+        \end{proof}
 
-    %implied read order is reversed when their corresponding thread identities are reversed
-    \begin{property}
-        \label{iro-Rev}
-        Implied read orders are reversed when swapping their respective thread identities.
-    \end{property}
+        %implied read order is reversed when their corresponding thread identities are reversed
+        \begin{property}
+            \label{iro-Rev}
+            Implied read orders are reversed when swapping their respective thread identities.
+        \end{property}
 
-    \begin{proof}
-        Xyz
-    \end{proof}
+        \begin{proof}
+            Xyz
+        \end{proof}
 
-    %PENDING REVIEW
-    \begin{property}
-        \label{iro-partial-stability}
-        Reversing an implied read order, does not change implied read order of threads whose writes have been read by these respective reads. (formally specify it)
-    \end{property}
+        %PENDING REVIEW
+        \begin{property}
+            \label{iro-partial-stability}
+            Reversing an implied read order, does not change implied read order of threads whose writes have been read by these respective reads.(formally specify it)
+        \end{property}
 
-    \begin{proof}
-        Xyz
-    \end{proof}
+        \begin{proof}
+            Xyz
+        \end{proof}
 
-    %acylic is needed to show that they can be resolved respecting our irreflexivity constraint.
-    \begin{property}
-        \label{acyclic-iro}
-        Implied read orders are acyclic.
-    \end{property}
+        %acylic is needed to show that they can be resolved respecting our irreflexivity constraint.
+        \begin{property}
+            \label{acyclic-iro}
+            Implied read orders are acyclic.
+        \end{property}
 
-    \begin{proof}
-        Xyz
-    \end{proof}
+        \begin{proof}
+            Xyz
+        \end{proof}
 
     \paragraph{Forward Progress of Resolving Read Orders}
 
+        We cannot approach optimality the same way as we did Soundness.
+        This is because stability of implied read orders is not present while resolving them.
+        The following example shows one such example. 
+    
+        \critic{red}{Show example where after fixing a read order and another, the previous one is present again.}
+
+        Instead, what we will try to prove is Forward Progress; does resolving read orders eventually result in the irreflexivity condition to hold? 
+        For this, we split our task into two parts, which are stated as two lemmas below. 
+        Before that, we will introduce the notion of state here, to more formally state our requirement. 
+        
         %Define the state here as a set of implied write orders and implied read orders.
 
         %Show what a transition would mean for us, while swapping threads to fix write orders or read orders.
 
-    %lemma to show that new incorrect implied write orders resulting after resolving an implied read order have not been resolved before. 
-    \begin{lemma}
-        \label{iwo-unres-iro}
-        Consider state $S$ such that $Sound(S) \ \wedge \ \reln{r_j}{iro}{r_i} \ \wedge \ i < j$.
-        Consider state $S'$ that results after swapping threads $T_i$ and $T_j$. 
-        Then if $\neg Sound(S')$, the new implied write orders introduced were not resolved in any previous state $S''$ such that $S'' \to * S$ 
-    
-        \critic{red}{The word resolved is important as it means there wasn't any step in state transition that involved swapping the two threads to resolve implied write order between them.}
-    \end{lemma}
-
-
-
-    \begin{proof}
-        \begin{itemize}
-            \item Case wise analysis
-            \item Each case is proof by contradiction
-            \item Main argument is the fixed order in which we fix the implied orders (writes first then reads)
-        \end{itemize}    
-    \end{proof}
-
-    %lemma to show that if an incorrect read order previously resolved is introduced by resolving another read order, then it implies the the currently resolved one remains unresolved before and after resolving the previous one
-    \begin{lemma}
-        \label{iro-stability}
-        Consider a state $S$ such that $Sound(S) \ \wedge \ \reln{r_j}{iro}{r_i} \ \wedge \ i < j$.
-        Consider state $S'$ after swapping threads $T_i$ and $T_j$ and assume that no incorrect implied write orders are introduced in doing so. 
-        Consider also that $\reln{r_l}{iro}{r_k} \in S' \ \wedge \ k < l$.
-        Then if we swap threads $T_l$ and $T_k$ giving resultant state $S''$, then 
-        \begin{align*}
-            \reln{r_j}{iro}{r_i} \in S'' 
-            \Rightarrow
-            \reln{r_l}{iro}{r_k} \in S
-        \end{align*} 
-    \end{lemma}
-
-    \begin{proof}
-
-        \begin{itemize}
-            \item Case wise analysis.
-            \item Infer different ordering relations to show that said implied read order is stable.
-        \end{itemize}
+        %lemma to show that new incorrect implied write orders resulting after resolving an implied read order have not been resolved before. 
         
-    \end{proof}
+        \critic{red}{Show lemmas first, then the theorem. Prove the theorem first, assuming the lemmas hold. As the argument is quite intuitive. Then prove lemma 2 and show that it does not hold due to counter example. Then conclude that we cannot achieve optimality by resolving implied read orders. This would require changing the structure of the following content slightly.}
 
-
-    \begin{theorem}
-        \label{fwdprog-iro}
-        We can resolve all implied read orders to respect the irreflexivity constraints imposed on them.
-    \end{theorem}
-
-    \begin{proof}
+        \begin{lemma}
+            \label{iwo-unres-iro}
+            Consider state $S$ such that $Sound(S) \ \wedge \ \reln{r_j}{iro}{r_i} \ \wedge \ i < j$.
+            Consider state $S'$ that results after swapping threads $T_i$ and $T_j$. 
+            Then if $\neg Sound(S')$, the new implied write orders introduced were not resolved in any previous state $S''$ such that $S'' \to * S$ 
         
+            \critic{red}{The word resolved is important as it means there wasn't any step in state transition that involved swapping the two threads to resolve implied write order between them.}
+        \end{lemma}
+
+
+        \begin{proof}
+            \begin{itemize}
+                \item Case wise analysis
+                \item Each case is proof by contradiction
+                \item Main argument is the fixed order in which we fix the implied orders (writes first then reads)
+            \end{itemize}    
+        \end{proof}
+
+        %lemma to show that if an incorrect read order previously resolved is introduced by resolving another read order, then it implies the the currently resolved one remains unresolved before and after resolving the previous one
+        \begin{lemma}
+            \label{iro-stability}
+            Consider a state $S$ such that $Sound(S) \ \wedge \ \reln{r_j}{iro}{r_i} \ \wedge \ i < j$.
+            Consider state $S'$ after swapping threads $T_i$ and $T_j$ and assume that no incorrect implied write orders are introduced in doing so. 
+            Consider also that $\reln{r_l}{iro}{r_k} \in S' \ \wedge \ k < l$.
+            Then if we swap threads $T_l$ and $T_k$ giving resultant state $S''$, then 
+            \begin{align*}
+                \reln{r_j}{iro}{r_i} \in S'' 
+                \Rightarrow
+                \reln{r_l}{iro}{r_k} \in S
+            \end{align*} 
+        \end{lemma}
+
+        \begin{proof}
+
+            \critic{red}{Write this proof first. And while proving, show that one case is a counter example.}
+
+            \begin{itemize}
+                \item Case wise analysis.
+                \item Infer different ordering relations to show that said implied read order is stable.
+            \end{itemize}
+
+        \end{proof}
+
+        %STOP HERE. 
+        Lemma \ref{iro-stability} does not hold as the above counter-example shows.
+        In particular, we observe that:
         \begin{itemize}
-            \item Case 1: If any incorrect implied write orders introduced in the process of resolving read orders 
-
-                By Soundness, we can resolve them. 
-                By Lemma \ref{iwo-unres-iro}, every implied write order introduced will be new.
-                Hence, by contradiction, we cannot retain the original state $S$ from which we resolve the same set of implied read orders. 
-
-            \item Case 2: If no incorrect implied write orders introduced in the process.
-
-                To retain the original state with a particular unresolved implied read order, we can only swap threads with incorrect implied read orders as per our assumption. 
-                By Lemma \ref{iro-stability}, obtaining a previously resolved iro as unresolved will in the process resolve another iro which reamined unresolved while resolving hte previous one.
-                By contradiction, this is not the same state we want. \
+            \item We cannot resolve all the implied read orders to respect our irreflexivity constraint for optimality.
+            \item This is due to a cycle that is generated while resolving them using Prop \ref{iro-Rev}.
         \end{itemize}
 
-        By Case 1 and 2, one cannot reach the same initial state.
-        Because implied read orders are finite, the number of states are finite, and since we can only reach a state exactly once, 
-        we can resolve all implied read orders in the process. 
+        Thus, we cannot achieve optimality by resolving read orders. 
 
-        Hence proved.
+        \begin{theorem}
+            \label{fwdprog-iro}
+            We can resolve all implied read orders to respect the irreflexivity constraints imposed on them.
+        \end{theorem}
 
-    \end{proof}
+        \begin{proof}
+
+            \begin{itemize}
+                \item Case 1: If any incorrect implied write orders introduced in the process of resolving read orders 
+
+                    By Soundness, we can resolve them. 
+                    By Lemma \ref{iwo-unres-iro}, every implied write order introduced will be new.
+                    Hence, by contradiction, we cannot retain the original state $S$ from which we resolve the same set of implied read orders. 
+
+                \item Case 2: If no incorrect implied write orders introduced in the process.
+
+                    To retain the original state with a particular unresolved implied read order, we can only swap threads with incorrect implied read orders as per our assumption. 
+                    By Lemma \ref{iro-stability}, obtaining a previously resolved iro as unresolved will in the process resolve another iro which remained unresolved while resolving hte previous one.
+                    By contradiction, this is not the same state we want. \
+            \end{itemize}
+
+            By Case 1 and 2, one cannot reach the same initial state.
+            Because implied read orders are finite, the number of states are finite, and since we can only reach a state exactly once, 
+            we can resolve all implied read orders in the process. 
+
+            Hence proved.
+
+        \end{proof}
 
