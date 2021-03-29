@@ -281,6 +281,7 @@
     %Lemma 1: While fixing one set of equal writes, once an implied write order is fixed, it remains fixed. 
 
         \begin{lemma}
+            \label{iwo-lemma1}
             For one given set of equal writes, every implied write order that is "incorrect", can be fixed and will remain fixed.  
             (A more formal statement required perhaps?)
         \end{lemma}
@@ -406,6 +407,7 @@
     %Lemma 2: While fixing one set of implied write orders, any other implied write orders introduced between another set of writes has not been fixed before. 
 
         \begin{lemma}
+            \label{iwo-lemma2}
             For a given set of equal writes whose implied write orders respect Prop \ref{prop1}, new implied write order introduced among them by fixing other sets, if wrong, can be fixed and will remain fixed. 
             (A more formal statement required? Discuss with Viktor)        
         \end{lemma}
@@ -974,3 +976,16 @@
                 In summary, we can conclude that new implied write orders among other set of writes introduced while fixing an implied write order, if wrong cannot have been resolved earlier, and thus, by Lemma \ref{lemma1} can be fixed and will remain fixed.
 
         \end{proof}
+
+    We now prove soundness.
+    \begin{theorem}
+        \label{iwo-sound}
+        Resolving implied write orders to respect Prop \ref{prop1} covers all symmetric executions that do not respect it. 
+    \end{theorem}
+
+    \begin{proof}
+        Trivially, by Lemma \ref{iwo-lemma1} and Lemma \ref{iwo-lemma2}.
+        Since the number of implied write orders are finite in a given execution graph, we can resolve all of them. 
+    \end{proof}
+
+    
