@@ -18,8 +18,10 @@
 
     \begin{definition}{Symmetric Memory Order (\emph{smo})}
         \label{SymMemO}
-        A strict partal order between writes in a set of symmetric threads. Consider a set of symmetric threads $T_1 \equiv T_2 \equiv ... \equiv T_n$. Each of these threads have exactly one read event, and multiple write events, all to the same memory, say $x$. 
-
+        A strict partial order between writes in a set of symmetric threads. 
+        
+        Consider a set of symmetric threads $T_1 \equiv T_2 \equiv ... \equiv T_n$. 
+        Each of these threads have exactly one read event, and multiple write events, all to the same memory, say $x$. 
         Then each write in the above threads are involved in a symmetric order, such that. 
         \begin{align*}
             \forall i \in [0, n-1] \ . \ \reln{w_i^j}{smo}{w_{i+1}^j}

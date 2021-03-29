@@ -1,6 +1,34 @@
 \subsection{Implied Read Orders - A road to optimality?}
 
     %State examples showing that implied write orders though sorted can still have us explore more executions.
+    %Take pics from notes.
+    Let us start with the example below:
+    \begin{figure}
+        \centering
+        \includegraphics{Equivalence_Example.pdf}
+        \caption{Example program for read orders}
+        \label{read_ord:ex1}
+    \end{figure}
+
+    Consider now two possible execution graphs of the above program as below:
+    \begin{figure}
+        \centering
+        \includegraphics{Equivalence_Example.pdf}
+        \caption{Two execution graphs of the program in Figure \ref{read_ord:ex1}}
+        \label{read_ord:exec_ex1}
+    \end{figure}
+
+    Notice that both the above executions respect the irreflexivity constraint Prop \ref{prop1}.
+    Naturally, we must then consider both executions while performing model checking.
+    However, also notice that, on swapping threads $T_1$ and $T_3$ of the first execution graph, we do obtain the second execution graph.
+    This, by our definition of symmetry would mean both the above executions are symmetric. 
+
+    %Explain why the above symmetry exists.
+    The only difference that is present in the two executions is from where the read values of $T_1$ and $T_3$ come from.
+    In particular, note that $T_1$'s read value comes from the write of $T_4$, whereas that of $T_3$ comes from $T_2$.
+    This by the standards of sequential consistency implies that $T_3$'s read occurred before that of $T_1$.
+    While in that of the second execution, the order of reads is reverse. 
+    We can then conclude that we could leverage the read orders to even further reduce the set of executions we need to verify.  
 
     %Using them, note the reader that implied read orders are incorrect in some and so sorting them might help.
     The above examples show us that read orders can also play a role in defining symmetric executions.
@@ -10,24 +38,45 @@
     \paragraph{Resolving implied Read orders}
 
         It is important to note that we consider resolving implied read orders only when all the implied write orders are resolved.
+        This means, if any implied write orders do not respect Prop \ref{prop1}, then we only concern ourselves to resolving them.
         Our definition of implied read orders is only to capture those patterns in executions where Prop \ref{prop1} is satisfied.
         
         %total order between reads of symmetric threads.
-        \begin{definition}
+        \begin{definition}{Symmetric Read Order ($sro$)}
             \label{SymReadOrd}
-            xyz
+            A strict partial order between reads of symmetric threads.
+            
+            Consider a set of symmetric threads $T_1 \equiv T_2 \equiv ... \equiv T_n$. 
+            Each of these threads have exactly one read event, and multiple write events, all to the same memory, say $x$. 
+            Then each read in the above threads are involved in a symmetric order, such that
+            \begin{align*}
+                \forall i \in [0, n-1] \ . \ \reln{r_i}{sro}{r_{i+1}}.
+            \end{align*}
+
         \end{definition}
 
-        \begin{definition}{Implied Read Order}
+        %definition of implied read order. 
+        \begin{definition}{Implied Read Order($iro$)}
             \label{ImpReadOrd}
-            Here's the definition of implied read order. 
-            Note that the order is a sequential composition which is a binary relation between two writes, but whose reads are ordered.
-            Since we consider only one read per thread, we do not need to specify precisely the reads involved in composing this relation.
-            If we do want to specify, it would be $rf^{-1};smo;rf$, which would have three variants if defined with respect to implied write orders. 
-            We could define a property, saying which implied write orders can be inferred using a given implied read order. 
-            This can help us identify the exact set of relations (iwo for our purpose) that are subject to change. 
-            Additionally, we can also show which possible read orders are subject to change.
+            Binary relation between two reads in symmetric threads. 
+            Its definition is a sequential composition as follows:
+            \begin{align*}
+                rf^{-1};smo;rf
+            \end{align*} 
+
         \end{definition}
+
+        \begin{definition}{Optimality Condition}
+            \label{opt_cond}
+            Using Def \ref{SymReadOrd}, our optimality requirement is that every execution graph has read orders that respect the symmetric read order.
+            Formally, we can define it as the following \textit{irreflexivity constraint}:
+            \begin{align*}
+                sro;iro
+            \end{align*}
+
+        \end{definition}
+
+        We now define certain properties that would be useful for reasoning about read orders and their relation with implied write orders. 
 
         %the three forms of implied read order using implied write order and symmetric memory order.
         \begin{property}
@@ -43,8 +92,8 @@
         %every incorrect iro between two threads has no implied write orders between them 
         \begin{property}
             \label{iro-no-iwo}
-            If two threads have an "incorrect(one that does not respect our irreflexivity constraint)" implied read order between them, they do not     have any implied write order between them. 
-            Because we are only concerned about swapping threads with incorrect implied read orders, we only consider them for any reversal of fixed    implied write order.     
+            If two threads have an "incorrect(one that does not respect our irreflexivity constraint)" implied read order between them, they do not have any implied write order between them. 
+            Because we are only concerned about swapping threads with incorrect implied read orders, we only consider them for any reversal of fixed implied write order.     
         \end{property}
 
         \begin{proof}
@@ -80,6 +129,12 @@
         \begin{proof}
             Xyz
         \end{proof}
+
+        %Mention the strategy you would adopt here. 
+        The question now is whether we can resolve all such implied read orders to respect Def \ref{opt_cond}. 
+        Naturally, the strategy we can adopt could be same as that for soundness: To check whether resolved implied read orders remain stable while resolving others. 
+        Unfortunately, this is not true.
+    
 
     \paragraph{Forward Progress of Resolving Read Orders}
 
