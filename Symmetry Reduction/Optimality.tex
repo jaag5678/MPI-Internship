@@ -5,7 +5,7 @@
     Let us start with the example below:
     \begin{figure}
         \centering
-        \includegraphics{Equivalence_Example.pdf}
+        \includegraphics{ReadOrder_Prog(1).pdf}
         \caption{Example program for read orders}
         \label{read_ord:ex1}
     \end{figure}
@@ -13,14 +13,14 @@
     Consider now two possible execution graphs of the above program as below:
     \begin{figure}
         \centering
-        \includegraphics{Equivalence_Example.pdf}
+        \includegraphics{ReadOrder_Exec(1).pdf}
         \caption{Two execution graphs of the program in Figure \ref{read_ord:ex1}}
         \label{read_ord:exec_ex1}
     \end{figure}
 
     Notice that both the above executions respect the irreflexivity constraint Prop \ref{prop1}.
     Naturally, we must then consider both executions while performing model checking.
-    However, also notice that, on swapping threads $T_1$ and $T_3$ of the first execution graph, we do obtain the second execution graph.
+    However, also notice that, on swapping threads $T_1$ and $T_2$ of the first execution graph(left), we do obtain the second execution graph(right).
     This, by our definition of symmetry would mean both the above executions are symmetric. 
 
     %Explain why the above symmetry exists.
